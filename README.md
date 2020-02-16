@@ -29,6 +29,10 @@ import "github.com/shimmeringbee/zcl"
 
 ## Usage
 
+**This libraries API is unstable and should not yet be relied upon.**
+
+This piece of software is not ready for general use.
+
 ## Maintainers
 
 [@pwood](https://github.com/pwood)
