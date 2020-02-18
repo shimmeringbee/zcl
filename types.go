@@ -1,5 +1,11 @@
 package zcl
 
+import (
+	"errors"
+	"fmt"
+	"github.com/shimmeringbee/bytecodec/bitbuffer"
+)
+
 /*
  * Zigbee Cluster List data types, as per 2.6.2 in ZCL Revision 6 (14 January 2016).
  * Downloaded From: https://zigbeealliance.org/developer_resources/zigbee-cluster-library/
@@ -75,3 +81,79 @@ const (
 	TypeSecurityKey128 AttributeDataType = 0xf1
 	TypeUnknown        AttributeDataType = 0xff
 )
+
+type AttributeDataType byte
+type AttributeIdentifier uint16
+
+type AttributeDataTypeValue struct {
+	DataType AttributeDataType
+	Value    interface{}
+}
+
+func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
+	if err := bb.WriteByte(byte(a.DataType)); err != nil {
+		return err
+	}
+
+	switch a.DataType {
+	case TypeNull:
+		return nil
+	case TypeData8:
+		return a.marshallData(bb, 1)
+	default:
+		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
+	}
+}
+
+func (a *AttributeDataTypeValue) marshallData(bb *bitbuffer.BitBuffer, size int) error {
+	data, ok := a.Value.([]byte)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	if len(data) != size {
+		return fmt.Errorf("data array provided does not match output size")
+	}
+
+	for i := 0; i < size; i++ {
+		if err := bb.WriteByte(data[i]); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
+	if dt, err := bb.ReadByte(); err != nil {
+		return err
+	} else {
+		a.DataType = AttributeDataType(dt)
+	}
+
+	switch a.DataType {
+	case TypeNull:
+		return nil
+	case TypeData8:
+		return a.unmarshalData(bb, 1)
+	default:
+		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
+	}
+}
+
+func (a *AttributeDataTypeValue) unmarshalData(bb *bitbuffer.BitBuffer, size int) error {
+	var data []byte
+
+	for i := 0; i < size; i++ {
+		if b, err := bb.ReadByte(); err != nil {
+			return err
+		} else {
+			data = append(data, b)
+		}
+	}
+
+	a.Value = data
+
+	return nil
+}
