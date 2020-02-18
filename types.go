@@ -6,72 +6,72 @@ package zcl
  */
 
 const (
-	TypeNull byte = 0x00
+	TypeNull AttributeDataType = 0x00
 
-	TypeData8  byte = 0x08
-	TypeData16 byte = 0x09
-	TypeData24 byte = 0x0a
-	TypeData32 byte = 0x0b
-	TypeData40 byte = 0x0c
-	TypeData48 byte = 0x0d
-	TypeData56 byte = 0x0e
-	TypeData64 byte = 0x0f
+	TypeData8  AttributeDataType = 0x08
+	TypeData16 AttributeDataType = 0x09
+	TypeData24 AttributeDataType = 0x0a
+	TypeData32 AttributeDataType = 0x0b
+	TypeData40 AttributeDataType = 0x0c
+	TypeData48 AttributeDataType = 0x0d
+	TypeData56 AttributeDataType = 0x0e
+	TypeData64 AttributeDataType = 0x0f
 
-	TypeBoolean byte = 0x10
+	TypeBoolean AttributeDataType = 0x10
 
-	TypeBitmap8  byte = 0x18
-	TypeBitmap16 byte = 0x19
-	TypeBitmap24 byte = 0x1a
-	TypeBitmap32 byte = 0x1b
-	TypeBitmap40 byte = 0x1c
-	TypeBitmap48 byte = 0x1d
-	TypeBitmap56 byte = 0x1e
-	TypeBitmap64 byte = 0x1f
+	TypeBitmap8  AttributeDataType = 0x18
+	TypeBitmap16 AttributeDataType = 0x19
+	TypeBitmap24 AttributeDataType = 0x1a
+	TypeBitmap32 AttributeDataType = 0x1b
+	TypeBitmap40 AttributeDataType = 0x1c
+	TypeBitmap48 AttributeDataType = 0x1d
+	TypeBitmap56 AttributeDataType = 0x1e
+	TypeBitmap64 AttributeDataType = 0x1f
 
-	TypeUnsignedInt8  byte = 0x20
-	TypeUnsignedInt16 byte = 0x21
-	TypeUnsignedInt24 byte = 0x22
-	TypeUnsignedInt32 byte = 0x23
-	TypeUnsignedInt40 byte = 0x24
-	TypeUnsignedInt48 byte = 0x25
-	TypeUnsignedInt56 byte = 0x26
-	TypeUnsignedInt64 byte = 0x27
+	TypeUnsignedInt8  AttributeDataType = 0x20
+	TypeUnsignedInt16 AttributeDataType = 0x21
+	TypeUnsignedInt24 AttributeDataType = 0x22
+	TypeUnsignedInt32 AttributeDataType = 0x23
+	TypeUnsignedInt40 AttributeDataType = 0x24
+	TypeUnsignedInt48 AttributeDataType = 0x25
+	TypeUnsignedInt56 AttributeDataType = 0x26
+	TypeUnsignedInt64 AttributeDataType = 0x27
 
-	TypeSignedInt8  byte = 0x28
-	TypeSignedInt16 byte = 0x29
-	TypeSignedInt24 byte = 0x2a
-	TypeSignedInt32 byte = 0x2b
-	TypeSignedInt40 byte = 0x2c
-	TypeSignedInt48 byte = 0x2d
-	TypeSignedInt56 byte = 0x2e
-	TypeSignedInt64 byte = 0x2f
+	TypeSignedInt8  AttributeDataType = 0x28
+	TypeSignedInt16 AttributeDataType = 0x29
+	TypeSignedInt24 AttributeDataType = 0x2a
+	TypeSignedInt32 AttributeDataType = 0x2b
+	TypeSignedInt40 AttributeDataType = 0x2c
+	TypeSignedInt48 AttributeDataType = 0x2d
+	TypeSignedInt56 AttributeDataType = 0x2e
+	TypeSignedInt64 AttributeDataType = 0x2f
 
-	TypeEnum8  byte = 0x30
-	TypeEnum16 byte = 0x31
+	TypeEnum8  AttributeDataType = 0x30
+	TypeEnum16 AttributeDataType = 0x31
 
-	TypeFloatSemi   byte = 0x38
-	TypeFloatSingle byte = 0x39
-	TypeFloatDouble byte = 0x3a
+	TypeFloatSemi   AttributeDataType = 0x38
+	TypeFloatSingle AttributeDataType = 0x39
+	TypeFloatDouble AttributeDataType = 0x3a
 
-	TypeStringOctet8      byte = 0x41
-	TypeStringCharacter8  byte = 0x42
-	TypeStringOctet16     byte = 0x43
-	TypeStringCharacter16 byte = 0x44
+	TypeStringOctet8      AttributeDataType = 0x41
+	TypeStringCharacter8  AttributeDataType = 0x42
+	TypeStringOctet16     AttributeDataType = 0x43
+	TypeStringCharacter16 AttributeDataType = 0x44
 
-	TypeArray     byte = 0x48
-	TypeStructure byte = 0x4c
-	TypeSet       byte = 0x50
-	TypeBag       byte = 0x51
+	TypeArray     AttributeDataType = 0x48
+	TypeStructure AttributeDataType = 0x4c
+	TypeSet       AttributeDataType = 0x50
+	TypeBag       AttributeDataType = 0x51
 
-	TypeTimeOfDay byte = 0xe0
-	TypeDate      byte = 0xe1
-	TypeUTCTime   byte = 0xe2
+	TypeTimeOfDay AttributeDataType = 0xe0
+	TypeDate      AttributeDataType = 0xe1
+	TypeUTCTime   AttributeDataType = 0xe2
 
-	TypeClusterID   byte = 0xe9
-	TypeAttributeID byte = 0xea
-	TypeBACnetOID   byte = 0xeb
+	TypeClusterID   AttributeDataType = 0xe9
+	TypeAttributeID AttributeDataType = 0xea
+	TypeBACnetOID   AttributeDataType = 0xeb
 
-	TypeIEEEAddress    byte = 0xf0
-	TypeSecurityKey128 byte = 0xf1
-	TypeUnknown        byte = 0xff
+	TypeIEEEAddress    AttributeDataType = 0xf0
+	TypeSecurityKey128 AttributeDataType = 0xf1
+	TypeUnknown        AttributeDataType = 0xff
 )
