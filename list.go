@@ -7,7 +7,7 @@ import "github.com/shimmeringbee/zigbee"
  * Downloaded From: https://zigbeealliance.org/developer_resources/zigbee-cluster-library/
  */
 
-var ClusterList = map[zigbee.ZCLClusterID]string{
+var ClusterList = map[zigbee.ClusterID]string{
 	/* ZCL6: General */
 	0x0000: "Basic",
 	0x0001: "Power Configuration",

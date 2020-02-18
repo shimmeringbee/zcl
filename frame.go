@@ -17,29 +17,29 @@ const (
 type CommandIdentifier uint8
 
 const (
-	ReadAttributes                     CommandIdentifier = 0x00
-	ReadAttributesResponse             CommandIdentifier = 0x01
-	WriteAttributes                    CommandIdentifier = 0x02
-	WriteAttributesUndivided           CommandIdentifier = 0x03
-	WriteAttributesResponse            CommandIdentifier = 0x04
-	WriteAttributesNoResponse          CommandIdentifier = 0x05
-	ConfigureReporting                 CommandIdentifier = 0x06
-	ConfigureReportingResponse         CommandIdentifier = 0x07
-	ReadReportingConfiguration         CommandIdentifier = 0x08
-	ReadReportingConfigurationResponse CommandIdentifier = 0x09
-	ReportAttributes                   CommandIdentifier = 0x0a
-	DefaultResponse                    CommandIdentifier = 0x0b
-	DiscoverAttributes                 CommandIdentifier = 0x0c
-	DiscoverAttributesResponse         CommandIdentifier = 0x0d
-	ReadAttributesStructured           CommandIdentifier = 0x0e
-	WriteAttributesStructured          CommandIdentifier = 0x0f
-	WriteAttributesStructuredResponse  CommandIdentifier = 0x10
-	DiscoverCommandsReceived           CommandIdentifier = 0x11
-	DiscoverCommandsReceivedResponse   CommandIdentifier = 0x12
-	DiscoverCommandsGenerated          CommandIdentifier = 0x13
-	DiscoverCommandsGeneratedResponse  CommandIdentifier = 0x14
-	DiscoverAttributesExtended         CommandIdentifier = 0x15
-	DiscoverAttributesExtendedResponse CommandIdentifier = 0x16
+	ReadAttributesID                     CommandIdentifier = 0x00
+	ReadAttributesResponseID             CommandIdentifier = 0x01
+	WriteAttributesID                    CommandIdentifier = 0x02
+	WriteAttributesUndividedID           CommandIdentifier = 0x03
+	WriteAttributesResponseID            CommandIdentifier = 0x04
+	WriteAttributesNoResponseID          CommandIdentifier = 0x05
+	ConfigureReportingID                 CommandIdentifier = 0x06
+	ConfigureReportingResponseID         CommandIdentifier = 0x07
+	ReadReportingConfigurationID         CommandIdentifier = 0x08
+	ReadReportingConfigurationResponseID CommandIdentifier = 0x09
+	ReportAttributesID                   CommandIdentifier = 0x0a
+	DefaultResponseID                    CommandIdentifier = 0x0b
+	DiscoverAttributesID                 CommandIdentifier = 0x0c
+	DiscoverAttributesResponseID         CommandIdentifier = 0x0d
+	ReadAttributesStructuredID           CommandIdentifier = 0x0e
+	WriteAttributesStructuredID          CommandIdentifier = 0x0f
+	WriteAttributesStructuredResponseID  CommandIdentifier = 0x10
+	DiscoverCommandsReceivedID           CommandIdentifier = 0x11
+	DiscoverCommandsReceivedResponseID   CommandIdentifier = 0x12
+	DiscoverCommandsGeneratedID          CommandIdentifier = 0x13
+	DiscoverCommandsGeneratedResponseID  CommandIdentifier = 0x14
+	DiscoverAttributesExtendedID         CommandIdentifier = 0x15
+	DiscoverAttributesExtendedResponseID CommandIdentifier = 0x16
 )
 
 type Control struct {
