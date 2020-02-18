@@ -8,6 +8,8 @@ github.com/shimmeringbee/bytecodec v0.0.0-20200218204049-72396ed9691c h1:JoqU9yB
 github.com/shimmeringbee/bytecodec v0.0.0-20200218204049-72396ed9691c/go.mod h1:J/gvzi9IgGBHP1cBn++bqJ4tchSbgS10N2lmGMlqD3M=
 github.com/shimmeringbee/bytecodec v0.0.0-20200218211613-a8b2f7bbd311 h1:iMbuc0V1taU/MULLByX6jwjiEltDEKcE9JF95QY/MDk=
 github.com/shimmeringbee/bytecodec v0.0.0-20200218211613-a8b2f7bbd311/go.mod h1:J/gvzi9IgGBHP1cBn++bqJ4tchSbgS10N2lmGMlqD3M=
+github.com/shimmeringbee/bytecodec v0.0.0-20200218212230-1bd87868c4ce h1:0nrkfOT1KU4WSs8b+2GXnAB+ggXFk3nl/qaSEIfCxME=
+github.com/shimmeringbee/bytecodec v0.0.0-20200218212230-1bd87868c4ce/go.mod h1:J/gvzi9IgGBHP1cBn++bqJ4tchSbgS10N2lmGMlqD3M=
 github.com/shimmeringbee/zigbee v0.0.0-20200211203343-845c277a2f38 h1:/tSS+6FeH71Zyugk6oF43hyQF9lbjCmjjkRxJUpfHvo=
 github.com/shimmeringbee/zigbee v0.0.0-20200211203343-845c277a2f38/go.mod h1:WVZ5totAgMhUc1ubHym27LsKRnXv1MAiGyaDEs4dzak=
 github.com/shimmeringbee/zigbee v0.0.0-20200216095834-429ab31c8e3b h1:4Uiy796n9ZBsjeRkDWuRLqf8eWOyQMvqAFLP4DwG550=
