@@ -1,6 +1,7 @@
 package zcl
 
 import (
+	"errors"
 	"fmt"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
 )
@@ -26,9 +27,29 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 	switch a.DataType {
 	case TypeNull:
 		return nil
+	case TypeData8:
+		if data, ok := a.Value.([]byte); !ok {
+			return errors.New("could not cast value")
+		} else {
+			return marshallData(bb, data, 1)
+		}
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
+}
+
+func marshallData(bb *bitbuffer.BitBuffer, data []byte, size int) error {
+	if len(data) != size {
+		return fmt.Errorf("data array provided does not match output size")
+	}
+
+	for i := 0; i < size; i++ {
+		if err := bb.WriteByte(data[i]); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
@@ -40,6 +61,8 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 
 	switch a.DataType {
 	case TypeNull:
+		return nil
+	case TypeData8:
 		return nil
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
