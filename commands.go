@@ -90,3 +90,8 @@ type ReportAttributesRecord struct {
 type ReportAttributes struct {
 	Records []ReportAttributesRecord
 }
+
+type DefaultResponse struct {
+	CommandIdentifier uint8
+	Status            uint8
+}
