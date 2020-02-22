@@ -261,3 +261,88 @@ func Test_ReadReportingConfiguration(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_ReadReportingConfigurationResponse(t *testing.T) {
+	t.Skip("skipping ReadReportingConfigurationResponse due to marshaler/unmarshaler being unable to handle order of attributes")
+
+	t.Run("direction 0x00, with discrete type, marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := ReadReportingConfigurationResponse{
+			Records: []ReadReportingConfigurationResponseRecord{
+				{
+					Status:           0x99,
+					Direction:        0x00,
+					Identifier:       0x1020,
+					DataType:         TypeData8,
+					MinimumInterval:  0x3040,
+					MaximumInterval:  0x5060,
+					ReportableChange: nil,
+					Timeout:          0x7080,
+				},
+			},
+		}
+		actualCommand := ReadReportingConfigurationResponse{}
+		expectedBytes := []byte{0x99, 0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50, 0x80, 0x70}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("direction 0x00, with analogue type, marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := ReadReportingConfigurationResponse{
+			Records: []ReadReportingConfigurationResponseRecord{
+				{
+					Status:           0x99,
+					Direction:        0x00,
+					Identifier:       0x1020,
+					DataType:         TypeUnsignedInt8,
+					MinimumInterval:  0x3040,
+					MaximumInterval:  0x5060,
+					ReportableChange: 0xaa,
+					Timeout:          0x7080,
+				},
+			},
+		}
+		actualCommand := ReadReportingConfigurationResponse{}
+		expectedBytes := []byte{0x99, 0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50, 0xaa, 0x80, 0x70}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("direction 0x01, marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := ReadReportingConfigurationResponse{
+			Records: []ReadReportingConfigurationResponseRecord{
+				{
+					Status:           0x99,
+					Direction:        0x01,
+					Identifier:       0x1020,
+					DataType:         0,
+					MinimumInterval:  0,
+					MaximumInterval:  0,
+					ReportableChange: nil,
+					Timeout:          0x3040,
+				},
+			},
+		}
+		actualCommand := ReadReportingConfigurationResponse{}
+		expectedBytes := []byte{0x99, 0x01, 0x20, 0x10, 0x40, 0x30}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}

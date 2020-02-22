@@ -66,3 +66,18 @@ type ReadReportingConfigurationRecord struct {
 type ReadReportingConfiguration struct {
 	Records []ReadReportingConfigurationRecord
 }
+
+type ReadReportingConfigurationResponseRecord struct {
+	Status           uint8
+	Direction        uint8
+	Identifier       AttributeIdentifier
+	DataType         AttributeDataType `bcincludeif:"Direction==0"`
+	MinimumInterval  uint16            `bcincludeif:"Direction==0"`
+	MaximumInterval  uint16            `bcincludeif:"Direction==0"`
+	ReportableChange interface{}       `bcincludeif:"Direction==0"`
+	Timeout          uint16            `bcincludeif:"Direction==1"`
+}
+
+type ReadReportingConfigurationResponse struct {
+	Records []ReadReportingConfigurationResponseRecord
+}
