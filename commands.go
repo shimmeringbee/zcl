@@ -95,3 +95,8 @@ type DefaultResponse struct {
 	CommandIdentifier uint8
 	Status            uint8
 }
+
+type DiscoverAttributes struct {
+	StartAttributeIdentifier  uint16
+	MaximumNumberOfAttributes uint8
+}

@@ -391,3 +391,22 @@ func Test_DefaultResponse(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_DiscoverAttributes(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverAttributes{
+			StartAttributeIdentifier:  0x1020,
+			MaximumNumberOfAttributes: 0x40,
+		}
+		actualCommand := DiscoverAttributes{}
+		expectedBytes := []byte{0x20, 0x10, 0x40}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
