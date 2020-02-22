@@ -81,3 +81,12 @@ type ReadReportingConfigurationResponseRecord struct {
 type ReadReportingConfigurationResponse struct {
 	Records []ReadReportingConfigurationResponseRecord
 }
+
+type ReportAttributesRecord struct {
+	Identifier    AttributeIdentifier
+	DataTypeValue *AttributeDataTypeValue
+}
+
+type ReportAttributes struct {
+	Records []ReportAttributesRecord
+}
