@@ -82,6 +82,77 @@ const (
 	TypeUnknown        AttributeDataType = 0xff
 )
 
+var DiscreteTypes = map[AttributeDataType]bool{
+	TypeNull: false,
+
+	TypeData8:  true,
+	TypeData16: true,
+	TypeData24: true,
+	TypeData32: true,
+	TypeData40: true,
+	TypeData48: true,
+	TypeData56: true,
+	TypeData64: true,
+
+	TypeBoolean: true,
+
+	TypeBitmap8:  true,
+	TypeBitmap16: true,
+	TypeBitmap24: true,
+	TypeBitmap32: true,
+	TypeBitmap40: true,
+	TypeBitmap48: true,
+	TypeBitmap56: true,
+	TypeBitmap64: true,
+
+	TypeUnsignedInt8:  false,
+	TypeUnsignedInt16: false,
+	TypeUnsignedInt24: false,
+	TypeUnsignedInt32: false,
+	TypeUnsignedInt40: false,
+	TypeUnsignedInt48: false,
+	TypeUnsignedInt56: false,
+	TypeUnsignedInt64: false,
+
+	TypeSignedInt8:  false,
+	TypeSignedInt16: false,
+	TypeSignedInt24: false,
+	TypeSignedInt32: false,
+	TypeSignedInt40: false,
+	TypeSignedInt48: false,
+	TypeSignedInt56: false,
+	TypeSignedInt64: false,
+
+	TypeEnum8:  true,
+	TypeEnum16: true,
+
+	TypeFloatSemi:   false,
+	TypeFloatSingle: false,
+	TypeFloatDouble: false,
+
+	TypeStringOctet8:      true,
+	TypeStringCharacter8:  true,
+	TypeStringOctet16:     true,
+	TypeStringCharacter16: true,
+
+	TypeArray:     true,
+	TypeStructure: true,
+	TypeSet:       true,
+	TypeBag:       true,
+
+	TypeTimeOfDay: false,
+	TypeDate:      false,
+	TypeUTCTime:   false,
+
+	TypeClusterID:   true,
+	TypeAttributeID: true,
+	TypeBACnetOID:   true,
+
+	TypeIEEEAddress:    true,
+	TypeSecurityKey128: true,
+	TypeUnknown:        false,
+}
+
 type AttributeDataType byte
 type AttributeIdentifier uint16
 
