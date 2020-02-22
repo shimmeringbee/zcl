@@ -149,3 +149,8 @@ type DiscoverCommands struct {
 	StartCommandIdentifier  uint8
 	MaximumNumberOfCommands uint8
 }
+
+type DiscoverCommandsResponse struct {
+	DiscoveryComplete bool
+	CommandIdentifier []uint8
+}

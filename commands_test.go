@@ -535,3 +535,22 @@ func Test_DiscoverCommands(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_DiscoverCommandsResponse(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverCommandsResponse{
+			DiscoveryComplete: true,
+			CommandIdentifier: []uint8{0x02, 0x3},
+		}
+		actualCommand := DiscoverCommandsResponse{}
+		expectedBytes := []byte{0x01, 0x02, 0x03}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
