@@ -112,7 +112,8 @@ type DiscoverAttributesResponse struct {
 }
 
 type ReadAttributesStructuredSelector struct {
-	Index []uint16 `bcsliceprefix:"8"`
+	Reserved uint8    `bcfieldwidth:"4"`
+	Index    []uint16 `bcsliceprefix:"4"`
 }
 
 type ReadAttributesStructuredRecord struct {
