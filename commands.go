@@ -100,3 +100,13 @@ type DiscoverAttributes struct {
 	StartAttributeIdentifier  uint16
 	MaximumNumberOfAttributes uint8
 }
+
+type DiscoverAttributesResponseRecord struct {
+	Identifier AttributeIdentifier
+	DataType   AttributeDataType
+}
+
+type DiscoverAttributesResponse struct {
+	DiscoveryComplete bool
+	Records           []DiscoverAttributesResponseRecord
+}

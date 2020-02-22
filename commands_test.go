@@ -410,3 +410,27 @@ func Test_DiscoverAttributes(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_DiscoverAttributesResponse(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverAttributesResponse{
+			DiscoveryComplete: true,
+			Records: []DiscoverAttributesResponseRecord{
+				{
+					Identifier: 0x1020,
+					DataType:   TypeData8,
+				},
+			},
+		}
+		actualCommand := DiscoverAttributesResponse{}
+		expectedBytes := []byte{0x01, 0x20, 0x10, 0x08}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
