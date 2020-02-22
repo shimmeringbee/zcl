@@ -145,12 +145,22 @@ type WriteAttributesStructuredResponse struct {
 	Records []WriteAttributesStructuredResponseRecord
 }
 
-type DiscoverCommands struct {
+type DiscoverCommandsReceived struct {
 	StartCommandIdentifier  uint8
 	MaximumNumberOfCommands uint8
 }
 
-type DiscoverCommandsResponse struct {
+type DiscoverCommandsReceivedResponse struct {
+	DiscoveryComplete bool
+	CommandIdentifier []uint8
+}
+
+type DiscoverCommandsGenerated struct {
+	StartCommandIdentifier  uint8
+	MaximumNumberOfCommands uint8
+}
+
+type DiscoverCommandsGeneratedResponse struct {
 	DiscoveryComplete bool
 	CommandIdentifier []uint8
 }

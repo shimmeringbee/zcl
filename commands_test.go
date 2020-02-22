@@ -517,13 +517,13 @@ func Test_WriteAttributesStructuredResponse(t *testing.T) {
 	})
 }
 
-func Test_DiscoverCommands(t *testing.T) {
+func Test_DiscoverCommandsReceived(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := DiscoverCommands{
+		expectedCommand := DiscoverCommandsReceived{
 			StartCommandIdentifier:  0x10,
 			MaximumNumberOfCommands: 0x40,
 		}
-		actualCommand := DiscoverCommands{}
+		actualCommand := DiscoverCommandsReceived{}
 		expectedBytes := []byte{0x10, 0x40}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
@@ -536,13 +536,51 @@ func Test_DiscoverCommands(t *testing.T) {
 	})
 }
 
-func Test_DiscoverCommandsResponse(t *testing.T) {
+func Test_DiscoverCommandsReceivedResponse(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := DiscoverCommandsResponse{
+		expectedCommand := DiscoverCommandsReceivedResponse{
 			DiscoveryComplete: true,
 			CommandIdentifier: []uint8{0x02, 0x3},
 		}
-		actualCommand := DiscoverCommandsResponse{}
+		actualCommand := DiscoverCommandsReceivedResponse{}
+		expectedBytes := []byte{0x01, 0x02, 0x03}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
+
+func Test_DiscoverCommandsGenerated(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverCommandsGenerated{
+			StartCommandIdentifier:  0x10,
+			MaximumNumberOfCommands: 0x40,
+		}
+		actualCommand := DiscoverCommandsGenerated{}
+		expectedBytes := []byte{0x10, 0x40}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
+
+func Test_DiscoverCommandsGeneratedResponse(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverCommandsGeneratedResponse{
+			DiscoveryComplete: true,
+			CommandIdentifier: []uint8{0x02, 0x3},
+		}
+		actualCommand := DiscoverCommandsGeneratedResponse{}
 		expectedBytes := []byte{0x01, 0x02, 0x03}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
