@@ -57,3 +57,12 @@ type ConfigureReportingResponseRecord struct {
 type ConfigureReportingResponse struct {
 	Records []ConfigureReportingResponseRecord
 }
+
+type ReadReportingConfigurationRecord struct {
+	Direction  uint8
+	Identifier AttributeIdentifier
+}
+
+type ReadReportingConfiguration struct {
+	Records []ReadReportingConfigurationRecord
+}
