@@ -47,3 +47,13 @@ type ConfigureReportingRecord struct {
 type ConfigureReporting struct {
 	Records []ConfigureReportingRecord
 }
+
+type ConfigureReportingResponseRecord struct {
+	Status     uint8
+	Direction  uint8
+	Identifier AttributeIdentifier
+}
+
+type ConfigureReportingResponse struct {
+	Records []ConfigureReportingResponseRecord
+}

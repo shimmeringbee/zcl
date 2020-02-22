@@ -214,3 +214,27 @@ func Test_ConfigureReporting(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_ConfigureReportingResponse(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := ConfigureReportingResponse{
+			Records: []ConfigureReportingResponseRecord{
+				{
+					Status:     0x01,
+					Direction:  0x02,
+					Identifier: 0x1020,
+				},
+			},
+		}
+		actualCommand := ConfigureReportingResponse{}
+		expectedBytes := []byte{0x01, 0x02, 0x20, 0x10}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
