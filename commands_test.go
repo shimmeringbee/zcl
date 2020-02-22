@@ -516,3 +516,22 @@ func Test_WriteAttributesStructuredResponse(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_DiscoverCommands(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverCommands{
+			StartCommandIdentifier:  0x10,
+			MaximumNumberOfCommands: 0x40,
+		}
+		actualCommand := DiscoverCommands{}
+		expectedBytes := []byte{0x10, 0x40}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}

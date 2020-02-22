@@ -144,3 +144,8 @@ type WriteAttributesStructuredResponseRecord struct {
 type WriteAttributesStructuredResponse struct {
 	Records []WriteAttributesStructuredResponseRecord
 }
+
+type DiscoverCommands struct {
+	StartCommandIdentifier  uint8
+	MaximumNumberOfCommands uint8
+}
