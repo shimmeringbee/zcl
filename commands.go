@@ -111,31 +111,36 @@ type DiscoverAttributesResponse struct {
 	Records           []DiscoverAttributesResponseRecord
 }
 
-type ReadAttributesStructuredSelector struct {
-	Reserved uint8    `bcfieldwidth:"4"`
-	Index    []uint16 `bcsliceprefix:"4"`
-}
-
 type ReadAttributesStructuredRecord struct {
 	Identifier AttributeIdentifier
-	Selector   ReadAttributesStructuredSelector
+	Selector   Selector
 }
 
 type ReadAttributesStructured struct {
 	Records []ReadAttributesStructuredRecord
 }
 
-type WriteAttributesStructuredSelector struct {
+type Selector struct {
 	BagSetOperation uint8    `bcfieldwidth:"4"`
 	Index           []uint16 `bcsliceprefix:"4"`
 }
 
 type WriteAttributesStructuredRecord struct {
 	Identifier    AttributeIdentifier
-	Selector      WriteAttributesStructuredSelector
+	Selector      Selector
 	DataTypeValue *AttributeDataTypeValue
 }
 
 type WriteAttributesStructured struct {
 	Records []WriteAttributesStructuredRecord
+}
+
+type WriteAttributesStructuredResponseRecord struct {
+	Status     uint8
+	Identifier AttributeIdentifier
+	Selector   Selector
+}
+
+type WriteAttributesStructuredResponse struct {
+	Records []WriteAttributesStructuredResponseRecord
 }

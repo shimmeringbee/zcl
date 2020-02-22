@@ -441,7 +441,7 @@ func Test_ReadAttributesStructured(t *testing.T) {
 			Records: []ReadAttributesStructuredRecord{
 				{
 					Identifier: 0x1020,
-					Selector: ReadAttributesStructuredSelector{
+					Selector: Selector{
 						Index: []uint16{0x3040, 0x5060},
 					},
 				},
@@ -466,7 +466,7 @@ func Test_WriteAttributesStructured(t *testing.T) {
 			Records: []WriteAttributesStructuredRecord{
 				{
 					Identifier: 0x1020,
-					Selector: WriteAttributesStructuredSelector{
+					Selector: Selector{
 						BagSetOperation: 0x02,
 						Index:           []uint16{0x3040, 0x5060},
 					},
@@ -479,6 +479,33 @@ func Test_WriteAttributesStructured(t *testing.T) {
 		}
 		actualCommand := WriteAttributesStructured{}
 		expectedBytes := []byte{0x20, 0x10, 0x22, 0x40, 0x30, 0x60, 0x50, 0x08, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
+
+func Test_WriteAttributesStructuredResponse(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := WriteAttributesStructuredResponse{
+			Records: []WriteAttributesStructuredResponseRecord{
+				{
+					Status:     0x01,
+					Identifier: 0x1020,
+					Selector: Selector{
+						BagSetOperation: 0x02,
+						Index:           []uint16{0x3040, 0x5060},
+					},
+				},
+			},
+		}
+		actualCommand := WriteAttributesStructuredResponse{}
+		expectedBytes := []byte{0x01, 0x20, 0x10, 0x22, 0x40, 0x30, 0x60, 0x50}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
