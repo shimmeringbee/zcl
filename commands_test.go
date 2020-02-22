@@ -434,3 +434,28 @@ func Test_DiscoverAttributesResponse(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_ReadAttributesStructured(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := ReadAttributesStructured{
+			Records: []ReadAttributesStructuredRecord{
+				{
+					Identifier: 0x1020,
+					Selector: ReadAttributesStructuredSelector{
+						Index: []uint16{0x3040, 0x5060},
+					},
+				},
+			},
+		}
+		actualCommand := ReadAttributesStructured{}
+		expectedBytes := []byte{0x20, 0x10, 0x02, 0x40, 0x30, 0x60, 0x50}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}

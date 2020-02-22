@@ -110,3 +110,16 @@ type DiscoverAttributesResponse struct {
 	DiscoveryComplete bool
 	Records           []DiscoverAttributesResponseRecord
 }
+
+type ReadAttributesStructuredSelector struct {
+	Index []uint16 `bcsliceprefix:"8"`
+}
+
+type ReadAttributesStructuredRecord struct {
+	Identifier AttributeIdentifier
+	Selector   ReadAttributesStructuredSelector
+}
+
+type ReadAttributesStructured struct {
+	Records []ReadAttributesStructuredRecord
+}
