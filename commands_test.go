@@ -592,3 +592,47 @@ func Test_DiscoverCommandsGeneratedResponse(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_DiscoverAttributesExtended(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverAttributesExtended{
+			StartAttributeIdentifier:  0x1020,
+			MaximumNumberOfAttributes: 0x30,
+		}
+		actualCommand := DiscoverAttributesExtended{}
+		expectedBytes := []byte{0x20, 0x10, 0x30}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
+
+func Test_DiscoverAttributesExtendedResponse(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := DiscoverAttributesExtendedResponse{
+			DiscoveryComplete: true,
+			Records: []DiscoverAttributesExtendedResponseRecord{
+				{
+					Identifier:    0x1020,
+					DataType:      TypeData8,
+					AccessControl: 0x04,
+				},
+			},
+		}
+		actualCommand := DiscoverAttributesExtendedResponse{}
+		expectedBytes := []byte{0x01, 0x20, 0x10, 0x08, 0x04}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}

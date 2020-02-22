@@ -164,3 +164,19 @@ type DiscoverCommandsGeneratedResponse struct {
 	DiscoveryComplete bool
 	CommandIdentifier []uint8
 }
+
+type DiscoverAttributesExtended struct {
+	StartAttributeIdentifier  uint16
+	MaximumNumberOfAttributes uint8
+}
+
+type DiscoverAttributesExtendedResponseRecord struct {
+	Identifier    AttributeIdentifier
+	DataType      AttributeDataType
+	AccessControl uint8
+}
+
+type DiscoverAttributesExtendedResponse struct {
+	DiscoveryComplete bool
+	Records           []DiscoverAttributesExtendedResponseRecord
+}
