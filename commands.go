@@ -124,3 +124,18 @@ type ReadAttributesStructuredRecord struct {
 type ReadAttributesStructured struct {
 	Records []ReadAttributesStructuredRecord
 }
+
+type WriteAttributesStructuredSelector struct {
+	BagSetOperation uint8    `bcfieldwidth:"4"`
+	Index           []uint16 `bcsliceprefix:"4"`
+}
+
+type WriteAttributesStructuredRecord struct {
+	Identifier    AttributeIdentifier
+	Selector      WriteAttributesStructuredSelector
+	DataTypeValue *AttributeDataTypeValue
+}
+
+type WriteAttributesStructured struct {
+	Records []WriteAttributesStructuredRecord
+}

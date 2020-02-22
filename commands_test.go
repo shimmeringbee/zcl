@@ -459,3 +459,33 @@ func Test_ReadAttributesStructured(t *testing.T) {
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
 }
+
+func Test_WriteAttributesStructured(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := WriteAttributesStructured{
+			Records: []WriteAttributesStructuredRecord{
+				{
+					Identifier: 0x1020,
+					Selector: WriteAttributesStructuredSelector{
+						BagSetOperation: 0x02,
+						Index:           []uint16{0x3040, 0x5060},
+					},
+					DataTypeValue: &AttributeDataTypeValue{
+						DataType: TypeData8,
+						Value:    []byte{0xaa},
+					},
+				},
+			},
+		}
+		actualCommand := WriteAttributesStructured{}
+		expectedBytes := []byte{0x20, 0x10, 0x22, 0x40, 0x30, 0x60, 0x50, 0x08, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
