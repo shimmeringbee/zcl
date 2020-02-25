@@ -6,25 +6,61 @@ import (
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
 )
 
-func Unmarshal(data []byte) (Message, error) {
-	message := Message{}
+func Unmarshal(data []byte) (ZCLFrame, error) {
+	frame := ZCLFrame{}
 
 	bb := bitbuffer.NewBitBufferFromBytes(data)
 
-	if err := bytecodec.UnmarshalFromBitBuffer(bb, &message.Header); err != nil {
-		return Message{}, err
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, &frame.Header); err != nil {
+		return ZCLFrame{}, err
 	}
 
-	switch message.Header.CommandIdentifier {
+	switch frame.Header.CommandIdentifier {
+	case ReadAttributesID:
+		frame.Command = &ReadAttributes{}
+	case ReadAttributesResponseID:
+		frame.Command = &ReadAttributesResponse{}
+	case WriteAttributesID:
+		frame.Command = &WriteAttributes{}
+	case WriteAttributesUndividedID:
+		frame.Command = &WriteAttributesUndivided{}
+	case WriteAttributesResponseID:
+		frame.Command = &WriteAttributesResponse{}
+	case WriteAttributesNoResponseID:
+		frame.Command = &WriteAttributesNoResponse{}
+	case ReportAttributesID:
+		frame.Command = &ReportAttributes{}
 	case DefaultResponseID:
-		message.Command = &DefaultResponse{}
+		frame.Command = &DefaultResponse{}
+	case DiscoverAttributesID:
+		frame.Command = &DiscoverAttributes{}
+	case DiscoverAttributesResponseID:
+		frame.Command = &DiscoverAttributesResponse{}
+	case ReadAttributesStructuredID:
+		frame.Command = &ReadAttributesStructured{}
+	case WriteAttributesStructuredID:
+		frame.Command = &WriteAttributesStructured{}
+	case WriteAttributesStructuredResponseID:
+		frame.Command = &WriteAttributesStructuredResponse{}
+	case DiscoverCommandsReceivedID:
+		frame.Command = &DiscoverCommandsReceived{}
+	case DiscoverCommandsReceivedResponseID:
+		frame.Command = &DiscoverCommandsReceivedResponse{}
+	case DiscoverCommandsGeneratedID:
+		frame.Command = &DiscoverCommandsGenerated{}
+	case DiscoverCommandsGeneratedResponseID:
+		frame.Command = &DiscoverCommandsGeneratedResponse{}
+	case DiscoverAttributesExtendedID:
+		frame.Command = &DiscoverAttributesExtended{}
+	case DiscoverAttributesExtendedResponseID:
+		frame.Command = &DiscoverAttributesExtendedResponse{}
 	default:
-		return Message{}, fmt.Errorf("unknown ZCL command identifier received: %d", message.Header.CommandIdentifier)
+		return ZCLFrame{}, fmt.Errorf("unknown ZCL command identifier received: %d", frame.Header.CommandIdentifier)
 	}
 
-	if err := bytecodec.UnmarshalFromBitBuffer(bb, message.Command); err != nil {
-		return Message{}, err
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, frame.Command); err != nil {
+		return ZCLFrame{}, err
 	}
 
-	return message, nil
+	return frame, nil
 }

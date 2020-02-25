@@ -32,6 +32,8 @@ type WriteAttributesResponse struct {
 	Records []WriteAttributesResponseRecord
 }
 
+type WriteAttributesUndivided WriteAttributes
+
 type WriteAttributesNoResponse WriteAttributes
 
 type ConfigureReportingRecord struct {

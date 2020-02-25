@@ -7,7 +7,7 @@ import (
 
 func Test_Marshal(t *testing.T) {
 	t.Run("a manufacturer specific header and message marshals", func(t *testing.T) {
-		message := Message{
+		message := ZCLFrame{
 			Header: Header{
 				Control: Control{
 					Reserved:               0,
@@ -34,7 +34,7 @@ func Test_Marshal(t *testing.T) {
 	})
 
 	t.Run("no manufacturer specific header and message marshals", func(t *testing.T) {
-		message := Message{
+		message := ZCLFrame{
 			Header: Header{
 				Control: Control{
 					Reserved:               0,

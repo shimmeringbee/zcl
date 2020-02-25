@@ -1,6 +1,6 @@
 package zcl
 
-type Message struct {
+type ZCLFrame struct {
 	Header  Header
 	Command interface{}
 }

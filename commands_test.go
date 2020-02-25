@@ -133,6 +133,32 @@ func Test_WriteAttributesNoResponse(t *testing.T) {
 	})
 }
 
+func Test_WriteAttributesUndivided(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := WriteAttributesUndivided{
+			Records: []WriteAttributesRecord{
+				{
+					Identifier: 0x1020,
+					DataTypeValue: &AttributeDataTypeValue{
+						DataType: TypeData8,
+						Value:    []byte{0xaa},
+					},
+				},
+			},
+		}
+		actualCommand := WriteAttributesUndivided{}
+		expectedBytes := []byte{0x20, 0x10, 0x08, 0x0aa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+}
+
 func Test_ConfigureReporting(t *testing.T) {
 	t.Skip("skipping ConfigureReporting due to marshaler/unmarshaler being unable to handle order of attributes")
 

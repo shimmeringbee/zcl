@@ -5,14 +5,14 @@ import (
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
 )
 
-func Marshal(message Message) ([]byte, error) {
+func Marshal(frame ZCLFrame) ([]byte, error) {
 	bb := bitbuffer.NewBitBuffer()
 
-	if err := bytecodec.MarshalToBitBuffer(bb, message.Header); err != nil {
+	if err := bytecodec.MarshalToBitBuffer(bb, frame.Header); err != nil {
 		return []byte{}, err
 	}
 
-	if err := bytecodec.MarshalToBitBuffer(bb, message.Command); err != nil {
+	if err := bytecodec.MarshalToBitBuffer(bb, frame.Command); err != nil {
 		return []byte{}, err
 	}
 
