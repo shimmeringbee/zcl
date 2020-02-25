@@ -171,6 +171,20 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return nil
 	case TypeData8:
 		return a.marshallData(bb, 1)
+	case TypeData16:
+		return a.marshallData(bb, 2)
+	case TypeData24:
+		return a.marshallData(bb, 3)
+	case TypeData32:
+		return a.marshallData(bb, 4)
+	case TypeData40:
+		return a.marshallData(bb, 5)
+	case TypeData48:
+		return a.marshallData(bb, 6)
+	case TypeData56:
+		return a.marshallData(bb, 7)
+	case TypeData64:
+		return a.marshallData(bb, 8)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -208,6 +222,20 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return nil
 	case TypeData8:
 		return a.unmarshalData(bb, 1)
+	case TypeData16:
+		return a.unmarshalData(bb, 2)
+	case TypeData24:
+		return a.unmarshalData(bb, 3)
+	case TypeData32:
+		return a.unmarshalData(bb, 4)
+	case TypeData40:
+		return a.unmarshalData(bb, 5)
+	case TypeData48:
+		return a.unmarshalData(bb, 6)
+	case TypeData56:
+		return a.unmarshalData(bb, 7)
+	case TypeData64:
+		return a.unmarshalData(bb, 8)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
