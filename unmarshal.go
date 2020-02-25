@@ -1,6 +1,7 @@
 package zcl
 
 import (
+	"errors"
 	"fmt"
 	"github.com/shimmeringbee/bytecodec"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
@@ -13,6 +14,10 @@ func Unmarshal(data []byte) (ZCLFrame, error) {
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, &frame.Header); err != nil {
 		return ZCLFrame{}, err
+	}
+
+	if frame.Header.Control.FrameType != FrameGlobal {
+		return ZCLFrame{}, errors.New("can not currently handle any frame which is not a global command")
 	}
 
 	switch frame.Header.CommandIdentifier {

@@ -686,4 +686,31 @@ func Test_Unmarshal(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedMessage, actualMessage)
 	})
+
+	t.Run("DiscoverAttributesExtendedResponse with manufacturer specific", func(t *testing.T) {
+		expectedMessage := ZCLFrame{
+			Header: Header{
+				Control: Control{
+					Reserved:               0,
+					DisableDefaultResponse: false,
+					Direction:              ClientToServer,
+					ManufacturerSpecific:   true,
+					FrameType:              FrameLocal,
+				},
+				Manufacturer:        0x1020,
+				TransactionSequence: 0x40,
+				CommandIdentifier:   DiscoverAttributesExtendedResponseID,
+			},
+			Command: &DiscoverAttributesExtendedResponse{
+				Records: []DiscoverAttributesExtendedResponseRecord{},
+			},
+		}
+
+		bytes, err := Marshal(expectedMessage)
+		assert.NoError(t, err)
+
+		_, err = Unmarshal(bytes)
+
+		assert.Error(t, err)
+	})
 }
