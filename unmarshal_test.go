@@ -181,6 +181,126 @@ func Test_Unmarshal(t *testing.T) {
 		assert.Equal(t, expectedMessage, actualMessage)
 	})
 
+	t.Run("ConfigureReporting with manufacturer specific", func(t *testing.T) {
+		t.Skip("can not be unmarshaled at bytecodec layer")
+
+		expectedMessage := ZCLFrame{
+			Header: Header{
+				Control: Control{
+					Reserved:               0,
+					DisableDefaultResponse: false,
+					Direction:              ClientToServer,
+					ManufacturerSpecific:   true,
+					FrameType:              FrameGlobal,
+				},
+				Manufacturer:        0x1020,
+				TransactionSequence: 0x40,
+				CommandIdentifier:   ConfigureReportingID,
+			},
+			Command: &ConfigureReporting{
+				Records: []ConfigureReportingRecord{},
+			},
+		}
+
+		bytes, err := Marshal(expectedMessage)
+		assert.NoError(t, err)
+
+		actualMessage, err := Unmarshal(bytes)
+
+		assert.NoError(t, err)
+		assert.Equal(t, expectedMessage, actualMessage)
+	})
+
+	t.Run("ConfigureReportingResponse with manufacturer specific", func(t *testing.T) {
+		t.Skip("can not be unmarshaled at bytecodec layer")
+
+		expectedMessage := ZCLFrame{
+			Header: Header{
+				Control: Control{
+					Reserved:               0,
+					DisableDefaultResponse: false,
+					Direction:              ClientToServer,
+					ManufacturerSpecific:   true,
+					FrameType:              FrameGlobal,
+				},
+				Manufacturer:        0x1020,
+				TransactionSequence: 0x40,
+				CommandIdentifier:   ConfigureReportingResponseID,
+			},
+			Command: &ConfigureReportingResponse{
+				Records: []ConfigureReportingResponseRecord{},
+			},
+		}
+
+		bytes, err := Marshal(expectedMessage)
+		assert.NoError(t, err)
+
+		actualMessage, err := Unmarshal(bytes)
+
+		assert.NoError(t, err)
+		assert.Equal(t, expectedMessage, actualMessage)
+	})
+
+	t.Run("ReadReportingConfiguration with manufacturer specific", func(t *testing.T) {
+		t.Skip("can not be unmarshaled at bytecodec layer")
+
+		expectedMessage := ZCLFrame{
+			Header: Header{
+				Control: Control{
+					Reserved:               0,
+					DisableDefaultResponse: false,
+					Direction:              ClientToServer,
+					ManufacturerSpecific:   true,
+					FrameType:              FrameGlobal,
+				},
+				Manufacturer:        0x1020,
+				TransactionSequence: 0x40,
+				CommandIdentifier:   ReadReportingConfigurationID,
+			},
+			Command: &ReadReportingConfiguration{
+				Records: []ReadReportingConfigurationRecord{},
+			},
+		}
+
+		bytes, err := Marshal(expectedMessage)
+		assert.NoError(t, err)
+
+		actualMessage, err := Unmarshal(bytes)
+
+		assert.NoError(t, err)
+		assert.Equal(t, expectedMessage, actualMessage)
+	})
+
+	t.Run("ReadReportingConfigurationResponse with manufacturer specific", func(t *testing.T) {
+		t.Skip("can not be unmarshaled at bytecodec layer")
+
+		expectedMessage := ZCLFrame{
+			Header: Header{
+				Control: Control{
+					Reserved:               0,
+					DisableDefaultResponse: false,
+					Direction:              ClientToServer,
+					ManufacturerSpecific:   true,
+					FrameType:              FrameGlobal,
+				},
+				Manufacturer:        0x1020,
+				TransactionSequence: 0x40,
+				CommandIdentifier:   ReadReportingConfigurationResponseID,
+			},
+			Command: &ReadReportingConfigurationResponse{
+				Records: []ReadReportingConfigurationResponseRecord{},
+			},
+		}
+
+		bytes, err := Marshal(expectedMessage)
+		assert.NoError(t, err)
+
+		actualMessage, err := Unmarshal(bytes)
+
+		assert.NoError(t, err)
+		assert.Equal(t, expectedMessage, actualMessage)
+	})
+
 	t.Run("ReportAttributes with manufacturer specific", func(t *testing.T) {
 		expectedMessage := ZCLFrame{
 			Header: Header{
