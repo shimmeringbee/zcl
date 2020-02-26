@@ -1,6 +1,7 @@
 package zcl
 
 import (
+	"github.com/shimmeringbee/zigbee"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -9,7 +10,7 @@ func Test_Unmarshal(t *testing.T) {
 	t.Run("message with unknown command identifier", func(t *testing.T) {
 		data := []byte{0b00000100, 0x20, 0x10, 0x40, 0xff}
 
-		_, err := Unmarshal(data)
+		_, err := Unmarshal(zigbee.ApplicationMessage{Data: data})
 		assert.Error(t, err)
 	})
 

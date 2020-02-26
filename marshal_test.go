@@ -27,10 +27,10 @@ func Test_Marshal(t *testing.T) {
 		}
 
 		expectedBytes := []byte{0b00000100, 0x20, 0x10, 0x40, 0x0b, 0xaa, 0x01}
-		actualBytes, err := Marshal(message)
+		actualMessage, err := Marshal(message)
 
 		assert.NoError(t, err)
-		assert.Equal(t, actualBytes, expectedBytes)
+		assert.Equal(t, actualMessage.Data, expectedBytes)
 	})
 
 	t.Run("no manufacturer specific header and message marshals", func(t *testing.T) {
@@ -54,9 +54,9 @@ func Test_Marshal(t *testing.T) {
 		}
 
 		expectedBytes := []byte{0b0000000, 0x40, 0x0b, 0xaa, 0x01}
-		actualBytes, err := Marshal(message)
+		actualMessage, err := Marshal(message)
 
 		assert.NoError(t, err)
-		assert.Equal(t, actualBytes, expectedBytes)
+		assert.Equal(t, actualMessage.Data, expectedBytes)
 	})
 }

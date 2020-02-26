@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"github.com/shimmeringbee/bytecodec"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
+	"github.com/shimmeringbee/zigbee"
 )
 
-func Unmarshal(data []byte) (ZCLFrame, error) {
+func Unmarshal(appMsg zigbee.ApplicationMessage) (ZCLFrame, error) {
 	frame := ZCLFrame{}
 
-	bb := bitbuffer.NewBitBufferFromBytes(data)
+	bb := bitbuffer.NewBitBufferFromBytes(appMsg.Data)
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, &frame.Header); err != nil {
 		return ZCLFrame{}, err

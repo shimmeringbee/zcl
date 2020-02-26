@@ -6,6 +6,8 @@ github.com/shimmeringbee/bytecodec v0.0.0-20200218212230-1bd87868c4ce h1:0nrkfOT
 github.com/shimmeringbee/bytecodec v0.0.0-20200218212230-1bd87868c4ce/go.mod h1:J/gvzi9IgGBHP1cBn++bqJ4tchSbgS10N2lmGMlqD3M=
 github.com/shimmeringbee/zigbee v0.0.0-20200216095834-429ab31c8e3b h1:4Uiy796n9ZBsjeRkDWuRLqf8eWOyQMvqAFLP4DwG550=
 github.com/shimmeringbee/zigbee v0.0.0-20200216095834-429ab31c8e3b/go.mod h1:WVZ5totAgMhUc1ubHym27LsKRnXv1MAiGyaDEs4dzak=
+github.com/shimmeringbee/zigbee v0.0.0-20200226075755-6b8669365435 h1:+ssQq7X/LuI4HMDsu3WnRc7hHrHpkXneW6Y93T+lGXU=
+github.com/shimmeringbee/zigbee v0.0.0-20200226075755-6b8669365435/go.mod h1:WVZ5totAgMhUc1ubHym27LsKRnXv1MAiGyaDEs4dzak=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
