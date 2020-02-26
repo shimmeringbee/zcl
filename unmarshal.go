@@ -8,68 +8,42 @@ import (
 	"github.com/shimmeringbee/zigbee"
 )
 
-func Unmarshal(appMsg zigbee.ApplicationMessage) (ZCLMessage, error) {
+func Unmarshal(cr *CommandRegistry, appMsg zigbee.ApplicationMessage) (Message, error) {
 	header := Header{}
 	var command interface{}
 
 	bb := bitbuffer.NewBitBufferFromBytes(appMsg.Data)
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, &header); err != nil {
-		return ZCLMessage{}, err
+		return Message{}, err
 	}
 
-	if header.Control.FrameType != FrameGlobal {
-		return ZCLMessage{}, errors.New("can not currently handle any frame which is not a global command")
-	}
+	switch header.Control.FrameType {
+	case FrameGlobal:
+		foundCommand, err := cr.GetGlobalCommand(header.CommandIdentifier)
 
-	switch header.CommandIdentifier {
-	case ReadAttributesID:
-		command = &ReadAttributes{}
-	case ReadAttributesResponseID:
-		command = &ReadAttributesResponse{}
-	case WriteAttributesID:
-		command = &WriteAttributes{}
-	case WriteAttributesUndividedID:
-		command = &WriteAttributesUndivided{}
-	case WriteAttributesResponseID:
-		command = &WriteAttributesResponse{}
-	case WriteAttributesNoResponseID:
-		command = &WriteAttributesNoResponse{}
-	case ReportAttributesID:
-		command = &ReportAttributes{}
-	case DefaultResponseID:
-		command = &DefaultResponse{}
-	case DiscoverAttributesID:
-		command = &DiscoverAttributes{}
-	case DiscoverAttributesResponseID:
-		command = &DiscoverAttributesResponse{}
-	case ReadAttributesStructuredID:
-		command = &ReadAttributesStructured{}
-	case WriteAttributesStructuredID:
-		command = &WriteAttributesStructured{}
-	case WriteAttributesStructuredResponseID:
-		command = &WriteAttributesStructuredResponse{}
-	case DiscoverCommandsReceivedID:
-		command = &DiscoverCommandsReceived{}
-	case DiscoverCommandsReceivedResponseID:
-		command = &DiscoverCommandsReceivedResponse{}
-	case DiscoverCommandsGeneratedID:
-		command = &DiscoverCommandsGenerated{}
-	case DiscoverCommandsGeneratedResponseID:
-		command = &DiscoverCommandsGeneratedResponse{}
-	case DiscoverAttributesExtendedID:
-		command = &DiscoverAttributesExtended{}
-	case DiscoverAttributesExtendedResponseID:
-		command = &DiscoverAttributesExtendedResponse{}
+		if err != nil {
+			return Message{}, fmt.Errorf("unknown ZCL global command identifier received: %d", header.CommandIdentifier)
+		}
+
+		command = foundCommand
+	case FrameLocal:
+		foundCommand, err := cr.GetLocalCommand(appMsg.ClusterID, header.Manufacturer, header.CommandIdentifier)
+
+		if err != nil {
+			return Message{}, fmt.Errorf("unknown ZCL local command identifier received: %d", header.CommandIdentifier)
+		}
+
+		command = foundCommand
 	default:
-		return ZCLMessage{}, fmt.Errorf("unknown ZCL command identifier received: %d", header.CommandIdentifier)
+		return Message{}, errors.New("unknown frame type encountered")
 	}
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, command); err != nil {
-		return ZCLMessage{}, err
+		return Message{}, err
 	}
 
-	return ZCLMessage{
+	return Message{
 		FrameType:           header.Control.FrameType,
 		Direction:           header.Control.Direction,
 		TransactionSequence: header.TransactionSequence,

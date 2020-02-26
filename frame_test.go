@@ -48,11 +48,11 @@ func Test_Header(t *testing.T) {
 
 func Test_ZCLMessage(t *testing.T) {
 	t.Run("a message without a manufacturer identifier is not identified as manufacturer specific", func(t *testing.T) {
-		message := ZCLMessage{}
+		message := Message{}
 		assert.False(t, message.isManufacturerSpecific())
 	})
 	t.Run("a message with a manufacturer identifier is identified as manufacturer specific", func(t *testing.T) {
-		message := ZCLMessage{Manufacturer: 0x0001}
+		message := Message{Manufacturer: 0x0001}
 		assert.True(t, message.isManufacturerSpecific())
 	})
 }

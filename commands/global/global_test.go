@@ -1,7 +1,8 @@
-package zcl
+package global
 
 import (
 	"github.com/shimmeringbee/bytecodec"
+	"github.com/shimmeringbee/zcl"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -9,7 +10,7 @@ import (
 func Test_ReadAttributes(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
 		expectedCommand := ReadAttributes{
-			Identifier: []AttributeIdentifier{
+			Identifier: []zcl.AttributeIdentifier{
 				0x1020,
 			},
 		}
@@ -24,6 +25,15 @@ func Test_ReadAttributes(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ReadAttributes{})
+		assert.NoError(t, err)
+		assert.Equal(t, ReadAttributesID, id)
+	})
 }
 
 func Test_ReadAttributesResponse(t *testing.T) {
@@ -33,8 +43,8 @@ func Test_ReadAttributesResponse(t *testing.T) {
 				{
 					Identifier: 0x1000,
 					Status:     0,
-					DataTypeValue: &AttributeDataTypeValue{
-						DataType: TypeData8,
+					DataTypeValue: &zcl.AttributeDataTypeValue{
+						DataType: zcl.TypeData8,
 						Value:    []byte{0xaa},
 					},
 				},
@@ -56,6 +66,15 @@ func Test_ReadAttributesResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ReadAttributesResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, ReadAttributesResponseID, id)
+	})
 }
 
 func Test_WriteAttributes(t *testing.T) {
@@ -64,8 +83,8 @@ func Test_WriteAttributes(t *testing.T) {
 			Records: []WriteAttributesRecord{
 				{
 					Identifier: 0x1020,
-					DataTypeValue: &AttributeDataTypeValue{
-						DataType: TypeData8,
+					DataTypeValue: &zcl.AttributeDataTypeValue{
+						DataType: zcl.TypeData8,
 						Value:    []byte{0xaa},
 					},
 				},
@@ -81,6 +100,15 @@ func Test_WriteAttributes(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&WriteAttributes{})
+		assert.NoError(t, err)
+		assert.Equal(t, WriteAttributesID, id)
 	})
 }
 
@@ -105,6 +133,15 @@ func Test_WriteAttributesResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&WriteAttributesResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, WriteAttributesResponseID, id)
+	})
 }
 
 func Test_WriteAttributesNoResponse(t *testing.T) {
@@ -113,8 +150,8 @@ func Test_WriteAttributesNoResponse(t *testing.T) {
 			Records: []WriteAttributesRecord{
 				{
 					Identifier: 0x1020,
-					DataTypeValue: &AttributeDataTypeValue{
-						DataType: TypeData8,
+					DataTypeValue: &zcl.AttributeDataTypeValue{
+						DataType: zcl.TypeData8,
 						Value:    []byte{0xaa},
 					},
 				},
@@ -131,6 +168,15 @@ func Test_WriteAttributesNoResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&WriteAttributesNoResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, WriteAttributesNoResponseID, id)
+	})
 }
 
 func Test_WriteAttributesUndivided(t *testing.T) {
@@ -139,8 +185,8 @@ func Test_WriteAttributesUndivided(t *testing.T) {
 			Records: []WriteAttributesRecord{
 				{
 					Identifier: 0x1020,
-					DataTypeValue: &AttributeDataTypeValue{
-						DataType: TypeData8,
+					DataTypeValue: &zcl.AttributeDataTypeValue{
+						DataType: zcl.TypeData8,
 						Value:    []byte{0xaa},
 					},
 				},
@@ -157,6 +203,15 @@ func Test_WriteAttributesUndivided(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&WriteAttributesUndivided{})
+		assert.NoError(t, err)
+		assert.Equal(t, WriteAttributesUndividedID, id)
+	})
 }
 
 func Test_ConfigureReporting(t *testing.T) {
@@ -168,7 +223,7 @@ func Test_ConfigureReporting(t *testing.T) {
 				{
 					Direction:        0x00,
 					Identifier:       0x1020,
-					DataType:         TypeData8,
+					DataType:         zcl.TypeData8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
 					ReportableChange: nil,
@@ -194,7 +249,7 @@ func Test_ConfigureReporting(t *testing.T) {
 				{
 					Direction:        0x00,
 					Identifier:       0x1020,
-					DataType:         TypeUnsignedInt8,
+					DataType:         zcl.TypeUnsignedInt8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
 					ReportableChange: 0xaa,
@@ -239,6 +294,15 @@ func Test_ConfigureReporting(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ConfigureReporting{})
+		assert.NoError(t, err)
+		assert.Equal(t, ConfigureReportingID, id)
+	})
 }
 
 func Test_ConfigureReportingResponse(t *testing.T) {
@@ -263,6 +327,15 @@ func Test_ConfigureReportingResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ConfigureReportingResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, ConfigureReportingResponseID, id)
+	})
 }
 
 func Test_ReadReportingConfiguration(t *testing.T) {
@@ -286,6 +359,15 @@ func Test_ReadReportingConfiguration(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ReadReportingConfiguration{})
+		assert.NoError(t, err)
+		assert.Equal(t, ReadReportingConfigurationID, id)
+	})
 }
 
 func Test_ReadReportingConfigurationResponse(t *testing.T) {
@@ -298,7 +380,7 @@ func Test_ReadReportingConfigurationResponse(t *testing.T) {
 					Status:           0x99,
 					Direction:        0x00,
 					Identifier:       0x1020,
-					DataType:         TypeData8,
+					DataType:         zcl.TypeData8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
 					ReportableChange: nil,
@@ -325,7 +407,7 @@ func Test_ReadReportingConfigurationResponse(t *testing.T) {
 					Status:           0x99,
 					Direction:        0x00,
 					Identifier:       0x1020,
-					DataType:         TypeUnsignedInt8,
+					DataType:         zcl.TypeUnsignedInt8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
 					ReportableChange: 0xaa,
@@ -371,6 +453,15 @@ func Test_ReadReportingConfigurationResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ReadReportingConfigurationResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, ReadReportingConfigurationResponseID, id)
+	})
 }
 
 func Test_ReportAttributes(t *testing.T) {
@@ -379,8 +470,8 @@ func Test_ReportAttributes(t *testing.T) {
 			Records: []ReportAttributesRecord{
 				{
 					Identifier: 0x1020,
-					DataTypeValue: &AttributeDataTypeValue{
-						DataType: TypeData8,
+					DataTypeValue: &zcl.AttributeDataTypeValue{
+						DataType: zcl.TypeData8,
 						Value:    []byte{0xaa},
 					},
 				},
@@ -396,6 +487,15 @@ func Test_ReportAttributes(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ReportAttributes{})
+		assert.NoError(t, err)
+		assert.Equal(t, ReportAttributesID, id)
 	})
 }
 
@@ -416,6 +516,15 @@ func Test_DefaultResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DefaultResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, DefaultResponseID, id)
+	})
 }
 
 func Test_DiscoverAttributes(t *testing.T) {
@@ -435,6 +544,15 @@ func Test_DiscoverAttributes(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverAttributes{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverAttributesID, id)
+	})
 }
 
 func Test_DiscoverAttributesResponse(t *testing.T) {
@@ -444,7 +562,7 @@ func Test_DiscoverAttributesResponse(t *testing.T) {
 			Records: []DiscoverAttributesResponseRecord{
 				{
 					Identifier: 0x1020,
-					DataType:   TypeData8,
+					DataType:   zcl.TypeData8,
 				},
 			},
 		}
@@ -458,6 +576,15 @@ func Test_DiscoverAttributesResponse(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverAttributesResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverAttributesResponseID, id)
 	})
 }
 
@@ -484,6 +611,15 @@ func Test_ReadAttributesStructured(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&ReadAttributesStructured{})
+		assert.NoError(t, err)
+		assert.Equal(t, ReadAttributesStructuredID, id)
+	})
 }
 
 func Test_WriteAttributesStructured(t *testing.T) {
@@ -496,8 +632,8 @@ func Test_WriteAttributesStructured(t *testing.T) {
 						BagSetOperation: 0x02,
 						Index:           []uint16{0x3040, 0x5060},
 					},
-					DataTypeValue: &AttributeDataTypeValue{
-						DataType: TypeData8,
+					DataTypeValue: &zcl.AttributeDataTypeValue{
+						DataType: zcl.TypeData8,
 						Value:    []byte{0xaa},
 					},
 				},
@@ -513,6 +649,15 @@ func Test_WriteAttributesStructured(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&WriteAttributesStructured{})
+		assert.NoError(t, err)
+		assert.Equal(t, WriteAttributesStructuredID, id)
 	})
 }
 
@@ -541,6 +686,15 @@ func Test_WriteAttributesStructuredResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&WriteAttributesStructuredResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, WriteAttributesStructuredResponseID, id)
+	})
 }
 
 func Test_DiscoverCommandsReceived(t *testing.T) {
@@ -559,6 +713,15 @@ func Test_DiscoverCommandsReceived(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverCommandsReceived{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverCommandsReceivedID, id)
 	})
 }
 
@@ -579,6 +742,15 @@ func Test_DiscoverCommandsReceivedResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverCommandsReceivedResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverCommandsReceivedResponseID, id)
+	})
 }
 
 func Test_DiscoverCommandsGenerated(t *testing.T) {
@@ -597,6 +769,15 @@ func Test_DiscoverCommandsGenerated(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverCommandsGenerated{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverCommandsGeneratedID, id)
 	})
 }
 
@@ -617,6 +798,15 @@ func Test_DiscoverCommandsGeneratedResponse(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverCommandsGeneratedResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverCommandsGeneratedResponseID, id)
+	})
 }
 
 func Test_DiscoverAttributesExtended(t *testing.T) {
@@ -636,6 +826,15 @@ func Test_DiscoverAttributesExtended(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
 	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverAttributesExtended{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverAttributesExtendedID, id)
+	})
 }
 
 func Test_DiscoverAttributesExtendedResponse(t *testing.T) {
@@ -645,7 +844,7 @@ func Test_DiscoverAttributesExtendedResponse(t *testing.T) {
 			Records: []DiscoverAttributesExtendedResponseRecord{
 				{
 					Identifier:    0x1020,
-					DataType:      TypeData8,
+					DataType:      zcl.TypeData8,
 					AccessControl: 0x04,
 				},
 			},
@@ -660,5 +859,14 @@ func Test_DiscoverAttributesExtendedResponse(t *testing.T) {
 		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
 		assert.NoError(t, err)
 		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetGlobalCommandIdentifier(&DiscoverAttributesExtendedResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, DiscoverAttributesExtendedResponseID, id)
 	})
 }

@@ -1,12 +1,13 @@
 package zcl
 
 import (
+	"errors"
 	"github.com/shimmeringbee/bytecodec"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
 	"github.com/shimmeringbee/zigbee"
 )
 
-func Marshal(message ZCLMessage) (zigbee.ApplicationMessage, error) {
+func Marshal(cr *CommandRegistry, message Message) (zigbee.ApplicationMessage, error) {
 	bb := bitbuffer.NewBitBuffer()
 
 	header := Header{
@@ -19,7 +20,27 @@ func Marshal(message ZCLMessage) (zigbee.ApplicationMessage, error) {
 		},
 		Manufacturer:        message.Manufacturer,
 		TransactionSequence: message.TransactionSequence,
-		CommandIdentifier:   0x0,
+	}
+
+	switch message.FrameType {
+	case FrameGlobal:
+		commandId, err := cr.GetGlobalCommandIdentifier(message.Command)
+
+		if err != nil {
+			return zigbee.ApplicationMessage{}, err
+		}
+
+		header.CommandIdentifier = commandId
+	case FrameLocal:
+		commandId, err := cr.GetLocalCommandIdentifier(message.ClusterID, message.Manufacturer, message.Command)
+
+		if err != nil {
+			return zigbee.ApplicationMessage{}, err
+		}
+
+		header.CommandIdentifier = commandId
+	default:
+		return zigbee.ApplicationMessage{}, errors.New("unknown frame type encountered")
 	}
 
 	if err := bytecodec.MarshalToBitBuffer(bb, header); err != nil {

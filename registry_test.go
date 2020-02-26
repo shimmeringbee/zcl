@@ -1,7 +1,6 @@
-package registry
+package zcl
 
 import (
-	"github.com/shimmeringbee/zcl"
 	"github.com/shimmeringbee/zigbee"
 	"github.com/stretchr/testify/assert"
 	"reflect"
@@ -11,9 +10,9 @@ import (
 func Test_CommandRegistryGlobal(t *testing.T) {
 	t.Run("getting a global command that does not exist results in an error", func(t *testing.T) {
 		type ThisCommand struct{}
-		expectedIdentifier := zcl.CommandIdentifier(1)
+		expectedIdentifier := CommandIdentifier(1)
 
-		cr := New()
+		cr := NewCommandRegistry()
 
 		_, err := cr.GetGlobalCommandIdentifier(&ThisCommand{})
 		assert.Error(t, err)
@@ -24,10 +23,10 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 
 	t.Run("registering a global command can be retrieved", func(t *testing.T) {
 		type ThisCommand struct{}
-		expectedIdentifier := zcl.CommandIdentifier(1)
+		expectedIdentifier := CommandIdentifier(1)
 		expectedType := reflect.TypeOf(&ThisCommand{})
 
-		cr := New()
+		cr := NewCommandRegistry()
 
 		cr.RegisterGlobal(expectedIdentifier, &ThisCommand{})
 
@@ -44,11 +43,11 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 
 	t.Run("getting a local command that does not exist results in an error", func(t *testing.T) {
 		type ThisCommand struct{}
-		expectedIdentifier := zcl.CommandIdentifier(1)
+		expectedIdentifier := CommandIdentifier(1)
 		clusterId := zigbee.ClusterID(0x1020)
 		manufacturer := uint16(0x3040)
 
-		cr := New()
+		cr := NewCommandRegistry()
 
 		_, err := cr.GetLocalCommandIdentifier(clusterId, manufacturer, &ThisCommand{})
 		assert.Error(t, err)
@@ -59,12 +58,12 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 
 	t.Run("registering a local command can be retrieved", func(t *testing.T) {
 		type ThisCommand struct{}
-		expectedIdentifier := zcl.CommandIdentifier(1)
+		expectedIdentifier := CommandIdentifier(1)
 		expectedType := reflect.TypeOf(&ThisCommand{})
 		clusterId := zigbee.ClusterID(0x1020)
 		manufacturer := uint16(0x3040)
 
-		cr := New()
+		cr := NewCommandRegistry()
 
 		cr.RegisterLocal(clusterId, manufacturer, expectedIdentifier, &ThisCommand{})
 
