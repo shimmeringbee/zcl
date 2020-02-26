@@ -1,5 +1,7 @@
 package zcl
 
+import "github.com/shimmeringbee/zigbee"
+
 type FrameType uint8
 
 const (
@@ -55,4 +57,19 @@ type Header struct {
 	Manufacturer        uint16 `bcincludeif:".Control.ManufacturerSpecific"`
 	TransactionSequence uint8
 	CommandIdentifier   CommandIdentifier
+}
+
+type ZCLMessage struct {
+	FrameType           FrameType
+	Direction           Direction
+	TransactionSequence uint8
+	Manufacturer        uint16
+	ClusterID           zigbee.ClusterID
+	SourceEndpoint      zigbee.Endpoint
+	DestinationEndpoint zigbee.Endpoint
+	Command             interface{}
+}
+
+func (z ZCLMessage) isManufacturerSpecific() bool {
+	return z.Manufacturer > 0
 }

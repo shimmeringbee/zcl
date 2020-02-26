@@ -8,65 +8,75 @@ import (
 	"github.com/shimmeringbee/zigbee"
 )
 
-func Unmarshal(appMsg zigbee.ApplicationMessage) (ZCLFrame, error) {
-	frame := ZCLFrame{}
+func Unmarshal(appMsg zigbee.ApplicationMessage) (ZCLMessage, error) {
+	header := Header{}
+	var command interface{}
 
 	bb := bitbuffer.NewBitBufferFromBytes(appMsg.Data)
 
-	if err := bytecodec.UnmarshalFromBitBuffer(bb, &frame.Header); err != nil {
-		return ZCLFrame{}, err
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, &header); err != nil {
+		return ZCLMessage{}, err
 	}
 
-	if frame.Header.Control.FrameType != FrameGlobal {
-		return ZCLFrame{}, errors.New("can not currently handle any frame which is not a global command")
+	if header.Control.FrameType != FrameGlobal {
+		return ZCLMessage{}, errors.New("can not currently handle any frame which is not a global command")
 	}
 
-	switch frame.Header.CommandIdentifier {
+	switch header.CommandIdentifier {
 	case ReadAttributesID:
-		frame.Command = &ReadAttributes{}
+		command = &ReadAttributes{}
 	case ReadAttributesResponseID:
-		frame.Command = &ReadAttributesResponse{}
+		command = &ReadAttributesResponse{}
 	case WriteAttributesID:
-		frame.Command = &WriteAttributes{}
+		command = &WriteAttributes{}
 	case WriteAttributesUndividedID:
-		frame.Command = &WriteAttributesUndivided{}
+		command = &WriteAttributesUndivided{}
 	case WriteAttributesResponseID:
-		frame.Command = &WriteAttributesResponse{}
+		command = &WriteAttributesResponse{}
 	case WriteAttributesNoResponseID:
-		frame.Command = &WriteAttributesNoResponse{}
+		command = &WriteAttributesNoResponse{}
 	case ReportAttributesID:
-		frame.Command = &ReportAttributes{}
+		command = &ReportAttributes{}
 	case DefaultResponseID:
-		frame.Command = &DefaultResponse{}
+		command = &DefaultResponse{}
 	case DiscoverAttributesID:
-		frame.Command = &DiscoverAttributes{}
+		command = &DiscoverAttributes{}
 	case DiscoverAttributesResponseID:
-		frame.Command = &DiscoverAttributesResponse{}
+		command = &DiscoverAttributesResponse{}
 	case ReadAttributesStructuredID:
-		frame.Command = &ReadAttributesStructured{}
+		command = &ReadAttributesStructured{}
 	case WriteAttributesStructuredID:
-		frame.Command = &WriteAttributesStructured{}
+		command = &WriteAttributesStructured{}
 	case WriteAttributesStructuredResponseID:
-		frame.Command = &WriteAttributesStructuredResponse{}
+		command = &WriteAttributesStructuredResponse{}
 	case DiscoverCommandsReceivedID:
-		frame.Command = &DiscoverCommandsReceived{}
+		command = &DiscoverCommandsReceived{}
 	case DiscoverCommandsReceivedResponseID:
-		frame.Command = &DiscoverCommandsReceivedResponse{}
+		command = &DiscoverCommandsReceivedResponse{}
 	case DiscoverCommandsGeneratedID:
-		frame.Command = &DiscoverCommandsGenerated{}
+		command = &DiscoverCommandsGenerated{}
 	case DiscoverCommandsGeneratedResponseID:
-		frame.Command = &DiscoverCommandsGeneratedResponse{}
+		command = &DiscoverCommandsGeneratedResponse{}
 	case DiscoverAttributesExtendedID:
-		frame.Command = &DiscoverAttributesExtended{}
+		command = &DiscoverAttributesExtended{}
 	case DiscoverAttributesExtendedResponseID:
-		frame.Command = &DiscoverAttributesExtendedResponse{}
+		command = &DiscoverAttributesExtendedResponse{}
 	default:
-		return ZCLFrame{}, fmt.Errorf("unknown ZCL command identifier received: %d", frame.Header.CommandIdentifier)
+		return ZCLMessage{}, fmt.Errorf("unknown ZCL command identifier received: %d", header.CommandIdentifier)
 	}
 
-	if err := bytecodec.UnmarshalFromBitBuffer(bb, frame.Command); err != nil {
-		return ZCLFrame{}, err
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, command); err != nil {
+		return ZCLMessage{}, err
 	}
 
-	return frame, nil
+	return ZCLMessage{
+		FrameType:           header.Control.FrameType,
+		Direction:           header.Control.Direction,
+		TransactionSequence: header.TransactionSequence,
+		Manufacturer:        header.Manufacturer,
+		ClusterID:           appMsg.ClusterID,
+		SourceEndpoint:      appMsg.SourceEndpoint,
+		DestinationEndpoint: appMsg.DestinationEndpoint,
+		Command:             command,
+	}, nil
 }
