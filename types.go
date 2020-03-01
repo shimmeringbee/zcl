@@ -203,7 +203,7 @@ func (a *AttributeDataTypeValue) marshalData(bb *bitbuffer.BitBuffer, size int) 
 		return fmt.Errorf("data array provided does not match output size")
 	}
 
-	for i := 0; i < size; i++ {
+	for i := size - 1; i >= 0; i-- {
 		if err := bb.WriteByte(data[i]); err != nil {
 			return err
 		}
@@ -260,13 +260,13 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 }
 
 func (a *AttributeDataTypeValue) unmarshalData(bb *bitbuffer.BitBuffer, size int) error {
-	var data []byte
+	data := make([]byte, size)
 
-	for i := 0; i < size; i++ {
+	for i := size - 1; i >= 0; i-- {
 		if b, err := bb.ReadByte(); err != nil {
 			return err
 		} else {
-			data = append(data, b)
+			data[i] = b
 		}
 	}
 

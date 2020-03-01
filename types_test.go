@@ -62,7 +62,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x09, 0x11, 0x22}
+		expectedBytes := []byte{0x09, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -79,7 +79,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22, 0x33},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x0a, 0x11, 0x22, 0x33}
+		expectedBytes := []byte{0x0a, 0x33, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -96,7 +96,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22, 0x33, 0x44},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x0b, 0x11, 0x22, 0x33, 0x44}
+		expectedBytes := []byte{0x0b, 0x44, 0x33, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -113,7 +113,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22, 0x33, 0x44, 0x55},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x0c, 0x11, 0x22, 0x33, 0x44, 0x55}
+		expectedBytes := []byte{0x0c, 0x55, 0x44, 0x33, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -130,7 +130,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22, 0x33, 0x44, 0x55, 0x66},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x0d, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66}
+		expectedBytes := []byte{0x0d, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -147,7 +147,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x0e, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77}
+		expectedBytes := []byte{0x0e, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -164,7 +164,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 			Value:    []byte{0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88},
 		}
 		actualValue := &AttributeDataTypeValue{}
-		expectedBytes := []byte{0x0f, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88}
+		expectedBytes := []byte{0x0f, 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
