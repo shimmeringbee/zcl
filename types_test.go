@@ -174,4 +174,21 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of boolean type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBoolean,
+			Value:    true,
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x10, 0x01}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }

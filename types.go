@@ -170,27 +170,29 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 	case TypeNull:
 		return nil
 	case TypeData8:
-		return a.marshallData(bb, 1)
+		return a.marshalData(bb, 1)
 	case TypeData16:
-		return a.marshallData(bb, 2)
+		return a.marshalData(bb, 2)
 	case TypeData24:
-		return a.marshallData(bb, 3)
+		return a.marshalData(bb, 3)
 	case TypeData32:
-		return a.marshallData(bb, 4)
+		return a.marshalData(bb, 4)
 	case TypeData40:
-		return a.marshallData(bb, 5)
+		return a.marshalData(bb, 5)
 	case TypeData48:
-		return a.marshallData(bb, 6)
+		return a.marshalData(bb, 6)
 	case TypeData56:
-		return a.marshallData(bb, 7)
+		return a.marshalData(bb, 7)
 	case TypeData64:
-		return a.marshallData(bb, 8)
+		return a.marshalData(bb, 8)
+	case TypeBoolean:
+		return a.marshalBoolean(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
 }
 
-func (a *AttributeDataTypeValue) marshallData(bb *bitbuffer.BitBuffer, size int) error {
+func (a *AttributeDataTypeValue) marshalData(bb *bitbuffer.BitBuffer, size int) error {
 	data, ok := a.Value.([]byte)
 
 	if !ok {
@@ -208,6 +210,20 @@ func (a *AttributeDataTypeValue) marshallData(bb *bitbuffer.BitBuffer, size int)
 	}
 
 	return nil
+}
+
+func (a *AttributeDataTypeValue) marshalBoolean(bb *bitbuffer.BitBuffer) error {
+	data, ok := a.Value.(bool)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	if data {
+		return bb.WriteByte(0x01)
+	} else {
+		return bb.WriteByte(0x00)
+	}
 }
 
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
@@ -236,6 +252,8 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalData(bb, 7)
 	case TypeData64:
 		return a.unmarshalData(bb, 8)
+	case TypeBoolean:
+		return a.unmarshalBoolean(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -255,4 +273,13 @@ func (a *AttributeDataTypeValue) unmarshalData(bb *bitbuffer.BitBuffer, size int
 	a.Value = data
 
 	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalBoolean(bb *bitbuffer.BitBuffer) error {
+	if data, err := bb.ReadByte(); err != nil {
+		return err
+	} else {
+		a.Value = data != 0x00
+		return nil
+	}
 }
