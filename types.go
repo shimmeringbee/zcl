@@ -187,6 +187,23 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalData(bb, 8)
 	case TypeBoolean:
 		return a.marshalBoolean(bb)
+	case TypeUnsignedInt8:
+		return a.marshalUint(bb, 8)
+	case TypeUnsignedInt16:
+		return a.marshalUint(bb, 16)
+	case TypeUnsignedInt24:
+		return a.marshalUint(bb, 24)
+	case TypeUnsignedInt32:
+		return a.marshalUint(bb, 32)
+	case TypeUnsignedInt40:
+		return a.marshalUint(bb, 40)
+	case TypeUnsignedInt48:
+		return a.marshalUint(bb, 48)
+	case TypeUnsignedInt56:
+		return a.marshalUint(bb, 56)
+	case TypeUnsignedInt64:
+		return a.marshalUint(bb, 64)
+
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -226,6 +243,23 @@ func (a *AttributeDataTypeValue) marshalBoolean(bb *bitbuffer.BitBuffer) error {
 	}
 }
 
+func (a *AttributeDataTypeValue) marshalUint(bb *bitbuffer.BitBuffer, bitsize int) error {
+	switch v := a.Value.(type) {
+	case uint:
+		return bb.WriteUint(uint64(v), bitbuffer.LittleEndian, bitsize)
+	case uint8:
+		return bb.WriteUint(uint64(v), bitbuffer.LittleEndian, bitsize)
+	case uint16:
+		return bb.WriteUint(uint64(v), bitbuffer.LittleEndian, bitsize)
+	case uint32:
+		return bb.WriteUint(uint64(v), bitbuffer.LittleEndian, bitsize)
+	case uint64:
+		return bb.WriteUint(v, bitbuffer.LittleEndian, bitsize)
+	}
+
+	return errors.New("marshalling uint to ZCL type received unsupported value")
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -254,6 +288,22 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalData(bb, 8)
 	case TypeBoolean:
 		return a.unmarshalBoolean(bb)
+	case TypeUnsignedInt8:
+		return a.unmarshalUint(bb, 8)
+	case TypeUnsignedInt16:
+		return a.unmarshalUint(bb, 16)
+	case TypeUnsignedInt24:
+		return a.unmarshalUint(bb, 24)
+	case TypeUnsignedInt32:
+		return a.unmarshalUint(bb, 32)
+	case TypeUnsignedInt40:
+		return a.unmarshalUint(bb, 40)
+	case TypeUnsignedInt48:
+		return a.unmarshalUint(bb, 48)
+	case TypeUnsignedInt56:
+		return a.unmarshalUint(bb, 56)
+	case TypeUnsignedInt64:
+		return a.unmarshalUint(bb, 64)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -282,4 +332,16 @@ func (a *AttributeDataTypeValue) unmarshalBoolean(bb *bitbuffer.BitBuffer) error
 		a.Value = data != 0x00
 		return nil
 	}
+}
+
+func (a *AttributeDataTypeValue) unmarshalUint(bb *bitbuffer.BitBuffer, bitsize int) error {
+	v, err := bb.ReadUint(bitbuffer.LittleEndian, bitsize)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = v
+
+	return nil
 }
