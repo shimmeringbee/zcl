@@ -327,4 +327,140 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of bitmap8 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap8,
+			Value:    uint64(0xaa),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x18, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap16 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap16,
+			Value:    uint64(0xaadd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x19, 0xdd, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap24 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap24,
+			Value:    uint64(0xaa00dd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x1a, 0xdd, 0x00, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap32 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap32,
+			Value:    uint64(0xaa0001dd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x1b, 0xdd, 0x01, 0x00, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap40 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap40,
+			Value:    uint64(0xaa000102dd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x1c, 0xdd, 0x02, 0x01, 0x00, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap48 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap48,
+			Value:    uint64(0xaa00010203dd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x1d, 0xdd, 0x03, 0x02, 0x01, 0x00, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap56 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap56,
+			Value:    uint64(0xaa0001020304dd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x1e, 0xdd, 0x04, 0x03, 0x02, 0x01, 0x00, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bitmap64 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBitmap64,
+			Value:    uint64(0xaa000102030405dd),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x1f, 0xdd, 0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0xaa}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }

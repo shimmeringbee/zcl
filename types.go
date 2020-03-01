@@ -187,6 +187,22 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalData(bb, 8)
 	case TypeBoolean:
 		return a.marshalBoolean(bb)
+	case TypeBitmap8:
+		return a.marshalUint(bb, 8)
+	case TypeBitmap16:
+		return a.marshalUint(bb, 16)
+	case TypeBitmap24:
+		return a.marshalUint(bb, 24)
+	case TypeBitmap32:
+		return a.marshalUint(bb, 32)
+	case TypeBitmap40:
+		return a.marshalUint(bb, 40)
+	case TypeBitmap48:
+		return a.marshalUint(bb, 48)
+	case TypeBitmap56:
+		return a.marshalUint(bb, 56)
+	case TypeBitmap64:
+		return a.marshalUint(bb, 64)
 	case TypeUnsignedInt8:
 		return a.marshalUint(bb, 8)
 	case TypeUnsignedInt16:
@@ -288,6 +304,22 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalData(bb, 8)
 	case TypeBoolean:
 		return a.unmarshalBoolean(bb)
+	case TypeBitmap8:
+		return a.unmarshalUint(bb, 8)
+	case TypeBitmap16:
+		return a.unmarshalUint(bb, 16)
+	case TypeBitmap24:
+		return a.unmarshalUint(bb, 24)
+	case TypeBitmap32:
+		return a.unmarshalUint(bb, 32)
+	case TypeBitmap40:
+		return a.unmarshalUint(bb, 40)
+	case TypeBitmap48:
+		return a.unmarshalUint(bb, 48)
+	case TypeBitmap56:
+		return a.unmarshalUint(bb, 56)
+	case TypeBitmap64:
+		return a.unmarshalUint(bb, 64)
 	case TypeUnsignedInt8:
 		return a.unmarshalUint(bb, 8)
 	case TypeUnsignedInt16:
