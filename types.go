@@ -235,6 +235,10 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalInt(bb, 56)
 	case TypeSignedInt64:
 		return a.marshalInt(bb, 64)
+	case TypeEnum8:
+		return a.marshalUint(bb, 8)
+	case TypeEnum16:
+		return a.marshalUint(bb, 16)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -384,6 +388,20 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalInt(bb, 56)
 	case TypeSignedInt64:
 		return a.unmarshalInt(bb, 64)
+	case TypeEnum8:
+		if err := a.unmarshalUint(bb, 8); err != nil {
+			return err
+		} else {
+			a.Value = uint8(a.Value.(uint64))
+			return nil
+		}
+	case TypeEnum16:
+		if err := a.unmarshalUint(bb, 16); err != nil {
+			return err
+		} else {
+			a.Value = uint16(a.Value.(uint64))
+			return nil
+		}
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
