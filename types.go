@@ -239,6 +239,10 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalUint(bb, 8)
 	case TypeEnum16:
 		return a.marshalUint(bb, 16)
+	case TypeStringOctet8:
+		return a.marshalString(bb, 8)
+	case TypeStringOctet16:
+		return a.marshalString(bb, 16)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -310,6 +314,16 @@ func (a *AttributeDataTypeValue) marshalInt(bb *bitbuffer.BitBuffer, bitsize int
 	}
 
 	return errors.New("marshalling int to ZCL type received unsupported value")
+}
+
+func (a *AttributeDataTypeValue) marshalString(bb *bitbuffer.BitBuffer, bitsize int) error {
+	data, ok := a.Value.(string)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bb.WriteStringLengthPrefixed(data, bitbuffer.LittleEndian, bitsize)
 }
 
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
@@ -402,6 +416,10 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 			a.Value = uint16(a.Value.(uint64))
 			return nil
 		}
+	case TypeStringOctet8:
+		return a.unmarshalString(bb, 8)
+	case TypeStringOctet16:
+		return a.unmarshalString(bb, 16)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -454,4 +472,13 @@ func (a *AttributeDataTypeValue) unmarshalInt(bb *bitbuffer.BitBuffer, bitsize i
 	a.Value = v
 
 	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalString(bb *bitbuffer.BitBuffer, bitsize int) error {
+	if data, err := bb.ReadStringLengthPrefixed(bitbuffer.LittleEndian, bitsize); err != nil {
+		return err
+	} else {
+		a.Value = data
+		return nil
+	}
 }
