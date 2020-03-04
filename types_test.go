@@ -463,4 +463,140 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of int8 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt8,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x28, 0x80}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int16 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt16,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x29, 0x80, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int24 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt24,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x2a, 0x80, 0xff, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int32 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt32,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x2b, 0x80, 0xff, 0xff, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int40 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt40,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x2c, 0x80, 0xff, 0xff, 0xff, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int48 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt48,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x2d, 0x80, 0xff, 0xff, 0xff, 0xff, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int56 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt56,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x2e, 0x80, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of int64 type", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSignedInt64,
+			Value:    int64(-128),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x2f, 0x80, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }
