@@ -261,6 +261,8 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalSecurityKey(bb)
 	case TypeBACnetOID:
 		return a.marshalBACnetOID(bb)
+	case TypeStructure:
+		return a.marshalStructure(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -424,6 +426,26 @@ func (a *AttributeDataTypeValue) marshalBACnetOID(bb *bitbuffer.BitBuffer) error
 	return bb.WriteUint(uint64(oid), bitbuffer.LittleEndian, 32)
 }
 
+func (a *AttributeDataTypeValue) marshalStructure(bb *bitbuffer.BitBuffer) error {
+	values, ok := a.Value.([]AttributeDataTypeValue)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	if err := bb.WriteUint(uint64(len(values)), bitbuffer.LittleEndian, 16); err != nil {
+		return err
+	}
+
+	for _, val := range values {
+		if err := val.Marshal(bb); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -534,6 +556,8 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalSecurityKey(bb)
 	case TypeBACnetOID:
 		return a.unmarshalBACnetOID(bb)
+	case TypeStructure:
+		return a.unmarshalStructure(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -689,6 +713,30 @@ func (a *AttributeDataTypeValue) unmarshalBACnetOID(bb *bitbuffer.BitBuffer) err
 	}
 
 	a.Value = BACnetOID(v)
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalStructure(bb *bitbuffer.BitBuffer) error {
+	itemCount, err := bb.ReadUint(bitbuffer.LittleEndian, 16)
+
+	if err != nil {
+		return err
+	}
+
+	values := []AttributeDataTypeValue{}
+
+	for i := 0; i < int(itemCount); i++ {
+		val := AttributeDataTypeValue{}
+
+		if err := val.Unmarshal(bb); err != nil {
+			return err
+		}
+
+		values = append(values, val)
+	}
+
+	a.Value = values
 
 	return nil
 }

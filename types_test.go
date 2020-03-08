@@ -814,4 +814,30 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of structure", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeStructure,
+			Value: []AttributeDataTypeValue{
+				{
+					DataType: TypeUnsignedInt8,
+					Value:    uint64(0x01),
+				},
+				{
+					DataType: TypeUnsignedInt8,
+					Value:    uint64(0x02),
+				},
+			},
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x4c, 0x02, 0x00, 0x20, 0x01, 0x20, 0x02}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }
