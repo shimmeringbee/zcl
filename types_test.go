@@ -750,7 +750,7 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 	t.Run("marshaling and unmarshaling of attribute ID", func(t *testing.T) {
 		expectedValue := &AttributeDataTypeValue{
 			DataType: TypeAttributeID,
-			Value:    AttributeIdentifier(0x0102),
+			Value:    AttributeID(0x0102),
 		}
 		actualValue := &AttributeDataTypeValue{}
 		expectedBytes := []byte{0xea, 0x02, 0x01}

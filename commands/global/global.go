@@ -29,11 +29,11 @@ const (
 )
 
 type ReadAttributes struct {
-	Identifier []AttributeIdentifier
+	Identifier []AttributeID
 }
 
 type ReadAttributeResponseRecord struct {
-	Identifier    AttributeIdentifier
+	Identifier    AttributeID
 	Status        uint8
 	DataTypeValue *AttributeDataTypeValue `bcincludeif:"Status==0"`
 }
@@ -47,13 +47,13 @@ type WriteAttributes struct {
 }
 
 type WriteAttributesRecord struct {
-	Identifier    AttributeIdentifier
+	Identifier    AttributeID
 	DataTypeValue *AttributeDataTypeValue
 }
 
 type WriteAttributesResponseRecord struct {
 	Status     uint8
-	Identifier AttributeIdentifier
+	Identifier AttributeID
 }
 
 type WriteAttributesResponse struct {
@@ -66,7 +66,7 @@ type WriteAttributesNoResponse WriteAttributes
 
 type ConfigureReportingRecord struct {
 	Direction        uint8
-	Identifier       AttributeIdentifier
+	Identifier       AttributeID
 	DataType         AttributeDataType `bcincludeif:"Direction==0"`
 	MinimumInterval  uint16            `bcincludeif:"Direction==0"`
 	MaximumInterval  uint16            `bcincludeif:"Direction==0"`
@@ -81,7 +81,7 @@ type ConfigureReporting struct {
 type ConfigureReportingResponseRecord struct {
 	Status     uint8
 	Direction  uint8
-	Identifier AttributeIdentifier
+	Identifier AttributeID
 }
 
 type ConfigureReportingResponse struct {
@@ -90,7 +90,7 @@ type ConfigureReportingResponse struct {
 
 type ReadReportingConfigurationRecord struct {
 	Direction  uint8
-	Identifier AttributeIdentifier
+	Identifier AttributeID
 }
 
 type ReadReportingConfiguration struct {
@@ -100,7 +100,7 @@ type ReadReportingConfiguration struct {
 type ReadReportingConfigurationResponseRecord struct {
 	Status           uint8
 	Direction        uint8
-	Identifier       AttributeIdentifier
+	Identifier       AttributeID
 	DataType         AttributeDataType `bcincludeif:"Direction==0"`
 	MinimumInterval  uint16            `bcincludeif:"Direction==0"`
 	MaximumInterval  uint16            `bcincludeif:"Direction==0"`
@@ -113,7 +113,7 @@ type ReadReportingConfigurationResponse struct {
 }
 
 type ReportAttributesRecord struct {
-	Identifier    AttributeIdentifier
+	Identifier    AttributeID
 	DataTypeValue *AttributeDataTypeValue
 }
 
@@ -132,7 +132,7 @@ type DiscoverAttributes struct {
 }
 
 type DiscoverAttributesResponseRecord struct {
-	Identifier AttributeIdentifier
+	Identifier AttributeID
 	DataType   AttributeDataType
 }
 
@@ -142,7 +142,7 @@ type DiscoverAttributesResponse struct {
 }
 
 type ReadAttributesStructuredRecord struct {
-	Identifier AttributeIdentifier
+	Identifier AttributeID
 	Selector   Selector
 }
 
@@ -156,7 +156,7 @@ type Selector struct {
 }
 
 type WriteAttributesStructuredRecord struct {
-	Identifier    AttributeIdentifier
+	Identifier    AttributeID
 	Selector      Selector
 	DataTypeValue *AttributeDataTypeValue
 }
@@ -167,7 +167,7 @@ type WriteAttributesStructured struct {
 
 type WriteAttributesStructuredResponseRecord struct {
 	Status     uint8
-	Identifier AttributeIdentifier
+	Identifier AttributeID
 	Selector   Selector
 }
 
@@ -201,7 +201,7 @@ type DiscoverAttributesExtended struct {
 }
 
 type DiscoverAttributesExtendedResponseRecord struct {
-	Identifier    AttributeIdentifier
+	Identifier    AttributeID
 	DataType      AttributeDataType
 	AccessControl uint8
 }

@@ -156,7 +156,7 @@ var DiscreteTypes = map[AttributeDataType]bool{
 }
 
 type AttributeDataType byte
-type AttributeIdentifier uint16
+type AttributeID uint16
 
 type AttributeDataTypeValue struct {
 	DataType AttributeDataType
@@ -381,7 +381,7 @@ func (a *AttributeDataTypeValue) marshalClusterID(bb *bitbuffer.BitBuffer) error
 }
 
 func (a *AttributeDataTypeValue) marshalAttributeID(bb *bitbuffer.BitBuffer) error {
-	attributeID, ok := a.Value.(AttributeIdentifier)
+	attributeID, ok := a.Value.(AttributeID)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -624,7 +624,7 @@ func (a *AttributeDataTypeValue) unmarshalAttributeID(bb *bitbuffer.BitBuffer) e
 		return err
 	}
 
-	a.Value = AttributeIdentifier(v)
+	a.Value = AttributeID(v)
 
 	return nil
 }

@@ -10,7 +10,7 @@ import (
 func Test_ReadAttributes(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
 		expectedCommand := ReadAttributes{
-			Identifier: []zcl.AttributeIdentifier{
+			Identifier: []zcl.AttributeID{
 				0x1020,
 			},
 		}
