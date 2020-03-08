@@ -257,6 +257,8 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalAttributeID(bb)
 	case TypeIEEEAddress:
 		return a.marshalIEEEAddress(bb)
+	case TypeSecurityKey128:
+		return a.marshalSecurityKey(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -400,6 +402,16 @@ func (a *AttributeDataTypeValue) marshalIEEEAddress(bb *bitbuffer.BitBuffer) err
 	return bb.WriteUint(uint64(ieeeAddress), bitbuffer.LittleEndian, 64)
 }
 
+func (a *AttributeDataTypeValue) marshalSecurityKey(bb *bitbuffer.BitBuffer) error {
+	networkKey, ok := a.Value.(zigbee.NetworkKey)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bytecodec.MarshalToBitBuffer(bb, &networkKey)
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -506,6 +518,8 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalAttributeID(bb)
 	case TypeIEEEAddress:
 		return a.unmarshalIEEEAddress(bb)
+	case TypeSecurityKey128:
+		return a.unmarshalSecurityKey(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -637,6 +651,18 @@ func (a *AttributeDataTypeValue) unmarshalIEEEAddress(bb *bitbuffer.BitBuffer) e
 	}
 
 	a.Value = zigbee.IEEEAddress(v)
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalSecurityKey(bb *bitbuffer.BitBuffer) error {
+	networkKey := zigbee.NetworkKey{}
+
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, &networkKey); err != nil {
+		return err
+	}
+
+	a.Value = networkKey
 
 	return nil
 }
