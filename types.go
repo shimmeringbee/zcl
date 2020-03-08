@@ -6,6 +6,7 @@ import (
 	"github.com/shimmeringbee/bytecodec"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
 	"github.com/shimmeringbee/zigbee"
+	"math"
 )
 
 /*
@@ -274,6 +275,10 @@ func marshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType, v interface{}
 		return marshalStructure(bb, v)
 	case TypeArray, TypeSet, TypeBag:
 		return marshalSlice(bb, v)
+	case TypeFloatSingle:
+		return marshalFloatSingle(bb, v)
+	case TypeFloatDouble:
+		return marshalFloatDouble(bb, v)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", dt)
 	}
@@ -481,6 +486,30 @@ func marshalSlice(bb *bitbuffer.BitBuffer, v interface{}) error {
 	return nil
 }
 
+func marshalFloatSingle(bb *bitbuffer.BitBuffer, v interface{}) error {
+	value, ok := v.(float32)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	bits := math.Float32bits(value)
+
+	return bb.WriteUint(uint64(bits), bitbuffer.LittleEndian, 32)
+}
+
+func marshalFloatDouble(bb *bitbuffer.BitBuffer, v interface{}) error {
+	value, ok := v.(float64)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	bits := math.Float64bits(value)
+
+	return bb.WriteUint(bits, bitbuffer.LittleEndian, 64)
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -609,6 +638,10 @@ func unmarshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType) (interface{
 		return unmarshalStructure(bb)
 	case TypeArray, TypeSet, TypeBag:
 		return unmarshalSlice(bb)
+	case TypeFloatSingle:
+		return unmarshalFloatSingle(bb)
+	case TypeFloatDouble:
+		return unmarshalFloatDouble(bb)
 	default:
 		return nil, fmt.Errorf("unsupported ZCL type to unmarshal: %d", dt)
 	}
@@ -795,6 +828,22 @@ func unmarshalSlice(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	}
 
 	return value, nil
+}
+
+func unmarshalFloatSingle(bb *bitbuffer.BitBuffer) (interface{}, error) {
+	if bits, err := bb.ReadUint(bitbuffer.LittleEndian, 32); err != nil {
+		return nil, err
+	} else {
+		return math.Float32frombits(uint32(bits)), nil
+	}
+}
+
+func unmarshalFloatDouble(bb *bitbuffer.BitBuffer) (interface{}, error) {
+	if bits, err := bb.ReadUint(bitbuffer.LittleEndian, 64); err != nil {
+		return nil, err
+	} else {
+		return math.Float64frombits(bits), nil
+	}
 }
 
 type BACnetOID uint32

@@ -900,4 +900,38 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of single precision floating point", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeFloatSingle,
+			Value:    float32(9.807),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x39, 0x79, 0xe9, 0x1c, 0x41}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of double precision floating point", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeFloatDouble,
+			Value:    float64(9.807),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x3a, 0x77, 0xbe, 0x9f, 0x1a, 0x2f, 0x9d, 0x23, 0x40}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }
