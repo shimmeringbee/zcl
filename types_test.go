@@ -840,4 +840,64 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of array", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeArray,
+			Value: AttributeSlice{
+				DataType: TypeUnsignedInt8,
+				Values:   []interface{}{uint64(0x01), uint64(0x02), uint64(0x03)},
+			},
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x48, 0x20, 0x03, 0x00, 0x01, 0x02, 0x03}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of set", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeSet,
+			Value: AttributeSlice{
+				DataType: TypeUnsignedInt8,
+				Values:   []interface{}{uint64(0x01), uint64(0x02), uint64(0x03)},
+			},
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x50, 0x20, 0x03, 0x00, 0x01, 0x02, 0x03}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of bag", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBag,
+			Value: AttributeSlice{
+				DataType: TypeUnsignedInt8,
+				Values:   []interface{}{uint64(0x01), uint64(0x02), uint64(0x03)},
+			},
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x51, 0x20, 0x03, 0x00, 0x01, 0x02, 0x03}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }

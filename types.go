@@ -163,113 +163,124 @@ type AttributeDataTypeValue struct {
 	Value    interface{}
 }
 
+type AttributeSlice struct {
+	DataType AttributeDataType
+	Values   []interface{}
+}
+
 func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 	if err := bb.WriteByte(byte(a.DataType)); err != nil {
 		return err
 	}
 
-	switch a.DataType {
+	return marshalZCLType(bb, a.DataType, a.Value)
+}
+
+func marshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType, v interface{}) error {
+	switch dt {
 	case TypeNull:
 		return nil
 	case TypeData8:
-		return a.marshalData(bb, 1)
+		return marshalData(bb, v, 1)
 	case TypeData16:
-		return a.marshalData(bb, 2)
+		return marshalData(bb, v, 2)
 	case TypeData24:
-		return a.marshalData(bb, 3)
+		return marshalData(bb, v, 3)
 	case TypeData32:
-		return a.marshalData(bb, 4)
+		return marshalData(bb, v, 4)
 	case TypeData40:
-		return a.marshalData(bb, 5)
+		return marshalData(bb, v, 5)
 	case TypeData48:
-		return a.marshalData(bb, 6)
+		return marshalData(bb, v, 6)
 	case TypeData56:
-		return a.marshalData(bb, 7)
+		return marshalData(bb, v, 7)
 	case TypeData64:
-		return a.marshalData(bb, 8)
+		return marshalData(bb, v, 8)
 	case TypeBoolean:
-		return a.marshalBoolean(bb)
+		return marshalBoolean(bb, v)
 	case TypeBitmap8:
-		return a.marshalUint(bb, 8)
+		return marshalUint(bb, v, 8)
 	case TypeBitmap16:
-		return a.marshalUint(bb, 16)
+		return marshalUint(bb, v, 16)
 	case TypeBitmap24:
-		return a.marshalUint(bb, 24)
+		return marshalUint(bb, v, 24)
 	case TypeBitmap32:
-		return a.marshalUint(bb, 32)
+		return marshalUint(bb, v, 32)
 	case TypeBitmap40:
-		return a.marshalUint(bb, 40)
+		return marshalUint(bb, v, 40)
 	case TypeBitmap48:
-		return a.marshalUint(bb, 48)
+		return marshalUint(bb, v, 48)
 	case TypeBitmap56:
-		return a.marshalUint(bb, 56)
+		return marshalUint(bb, v, 56)
 	case TypeBitmap64:
-		return a.marshalUint(bb, 64)
+		return marshalUint(bb, v, 64)
 	case TypeUnsignedInt8:
-		return a.marshalUint(bb, 8)
+		return marshalUint(bb, v, 8)
 	case TypeUnsignedInt16:
-		return a.marshalUint(bb, 16)
+		return marshalUint(bb, v, 16)
 	case TypeUnsignedInt24:
-		return a.marshalUint(bb, 24)
+		return marshalUint(bb, v, 24)
 	case TypeUnsignedInt32:
-		return a.marshalUint(bb, 32)
+		return marshalUint(bb, v, 32)
 	case TypeUnsignedInt40:
-		return a.marshalUint(bb, 40)
+		return marshalUint(bb, v, 40)
 	case TypeUnsignedInt48:
-		return a.marshalUint(bb, 48)
+		return marshalUint(bb, v, 48)
 	case TypeUnsignedInt56:
-		return a.marshalUint(bb, 56)
+		return marshalUint(bb, v, 56)
 	case TypeUnsignedInt64:
-		return a.marshalUint(bb, 64)
+		return marshalUint(bb, v, 64)
 	case TypeSignedInt8:
-		return a.marshalInt(bb, 8)
+		return marshalInt(bb, v, 8)
 	case TypeSignedInt16:
-		return a.marshalInt(bb, 16)
+		return marshalInt(bb, v, 16)
 	case TypeSignedInt24:
-		return a.marshalInt(bb, 24)
+		return marshalInt(bb, v, 24)
 	case TypeSignedInt32:
-		return a.marshalInt(bb, 32)
+		return marshalInt(bb, v, 32)
 	case TypeSignedInt40:
-		return a.marshalInt(bb, 40)
+		return marshalInt(bb, v, 40)
 	case TypeSignedInt48:
-		return a.marshalInt(bb, 48)
+		return marshalInt(bb, v, 48)
 	case TypeSignedInt56:
-		return a.marshalInt(bb, 56)
+		return marshalInt(bb, v, 56)
 	case TypeSignedInt64:
-		return a.marshalInt(bb, 64)
+		return marshalInt(bb, v, 64)
 	case TypeEnum8:
-		return a.marshalUint(bb, 8)
+		return marshalUint(bb, v, 8)
 	case TypeEnum16:
-		return a.marshalUint(bb, 16)
+		return marshalUint(bb, v, 16)
 	case TypeStringOctet8:
-		return a.marshalString(bb, 8)
+		return marshalString(bb, v, 8)
 	case TypeStringOctet16:
-		return a.marshalString(bb, 16)
+		return marshalString(bb, v, 16)
 	case TypeTimeOfDay:
-		return a.marshalTimeOfDay(bb)
+		return marshalTimeOfDay(bb, v)
 	case TypeDate:
-		return a.marshalDate(bb)
+		return marshalDate(bb, v)
 	case TypeUTCTime:
-		return a.marshalUTCTime(bb)
+		return marshalUTCTime(bb, v)
 	case TypeClusterID:
-		return a.marshalClusterID(bb)
+		return marshalClusterID(bb, v)
 	case TypeAttributeID:
-		return a.marshalAttributeID(bb)
+		return marshalAttributeID(bb, v)
 	case TypeIEEEAddress:
-		return a.marshalIEEEAddress(bb)
+		return marshalIEEEAddress(bb, v)
 	case TypeSecurityKey128:
-		return a.marshalSecurityKey(bb)
+		return marshalSecurityKey(bb, v)
 	case TypeBACnetOID:
-		return a.marshalBACnetOID(bb)
+		return marshalBACnetOID(bb, v)
 	case TypeStructure:
-		return a.marshalStructure(bb)
+		return marshalStructure(bb, v)
+	case TypeArray, TypeSet, TypeBag:
+		return marshalSlice(bb, v)
 	default:
-		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
+		return fmt.Errorf("unsupported ZCL type to marshal: %d", dt)
 	}
 }
 
-func (a *AttributeDataTypeValue) marshalData(bb *bitbuffer.BitBuffer, size int) error {
-	data, ok := a.Value.([]byte)
+func marshalData(bb *bitbuffer.BitBuffer, v interface{}, size int) error {
+	data, ok := v.([]byte)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -288,8 +299,8 @@ func (a *AttributeDataTypeValue) marshalData(bb *bitbuffer.BitBuffer, size int) 
 	return nil
 }
 
-func (a *AttributeDataTypeValue) marshalBoolean(bb *bitbuffer.BitBuffer) error {
-	data, ok := a.Value.(bool)
+func marshalBoolean(bb *bitbuffer.BitBuffer, v interface{}) error {
+	data, ok := v.(bool)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -302,8 +313,8 @@ func (a *AttributeDataTypeValue) marshalBoolean(bb *bitbuffer.BitBuffer) error {
 	}
 }
 
-func (a *AttributeDataTypeValue) marshalUint(bb *bitbuffer.BitBuffer, bitsize int) error {
-	switch v := a.Value.(type) {
+func marshalUint(bb *bitbuffer.BitBuffer, v interface{}, bitsize int) error {
+	switch v := v.(type) {
 	case uint:
 		return bb.WriteUint(uint64(v), bitbuffer.LittleEndian, bitsize)
 	case uint8:
@@ -319,8 +330,8 @@ func (a *AttributeDataTypeValue) marshalUint(bb *bitbuffer.BitBuffer, bitsize in
 	return errors.New("marshalling uint to ZCL type received unsupported value")
 }
 
-func (a *AttributeDataTypeValue) marshalInt(bb *bitbuffer.BitBuffer, bitsize int) error {
-	switch v := a.Value.(type) {
+func marshalInt(bb *bitbuffer.BitBuffer, v interface{}, bitsize int) error {
+	switch v := v.(type) {
 	case int:
 		return bb.WriteInt(int64(v), bitbuffer.LittleEndian, bitsize)
 	case int8:
@@ -336,8 +347,8 @@ func (a *AttributeDataTypeValue) marshalInt(bb *bitbuffer.BitBuffer, bitsize int
 	return errors.New("marshalling int to ZCL type received unsupported value")
 }
 
-func (a *AttributeDataTypeValue) marshalString(bb *bitbuffer.BitBuffer, bitsize int) error {
-	data, ok := a.Value.(string)
+func marshalString(bb *bitbuffer.BitBuffer, v interface{}, bitsize int) error {
+	data, ok := v.(string)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -346,8 +357,8 @@ func (a *AttributeDataTypeValue) marshalString(bb *bitbuffer.BitBuffer, bitsize 
 	return bb.WriteStringLengthPrefixed(data, bitbuffer.LittleEndian, bitsize)
 }
 
-func (a *AttributeDataTypeValue) marshalTimeOfDay(bb *bitbuffer.BitBuffer) error {
-	tod, ok := a.Value.(TimeOfDay)
+func marshalTimeOfDay(bb *bitbuffer.BitBuffer, v interface{}) error {
+	tod, ok := v.(TimeOfDay)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -356,8 +367,8 @@ func (a *AttributeDataTypeValue) marshalTimeOfDay(bb *bitbuffer.BitBuffer) error
 	return bytecodec.MarshalToBitBuffer(bb, &tod)
 }
 
-func (a *AttributeDataTypeValue) marshalDate(bb *bitbuffer.BitBuffer) error {
-	date, ok := a.Value.(Date)
+func marshalDate(bb *bitbuffer.BitBuffer, v interface{}) error {
+	date, ok := v.(Date)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -366,8 +377,8 @@ func (a *AttributeDataTypeValue) marshalDate(bb *bitbuffer.BitBuffer) error {
 	return bytecodec.MarshalToBitBuffer(bb, &date)
 }
 
-func (a *AttributeDataTypeValue) marshalUTCTime(bb *bitbuffer.BitBuffer) error {
-	utcTime, ok := a.Value.(UTCTime)
+func marshalUTCTime(bb *bitbuffer.BitBuffer, v interface{}) error {
+	utcTime, ok := v.(UTCTime)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -376,8 +387,8 @@ func (a *AttributeDataTypeValue) marshalUTCTime(bb *bitbuffer.BitBuffer) error {
 	return bb.WriteUint(uint64(utcTime), bitbuffer.LittleEndian, 32)
 }
 
-func (a *AttributeDataTypeValue) marshalClusterID(bb *bitbuffer.BitBuffer) error {
-	clusterID, ok := a.Value.(zigbee.ClusterID)
+func marshalClusterID(bb *bitbuffer.BitBuffer, v interface{}) error {
+	clusterID, ok := v.(zigbee.ClusterID)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -386,8 +397,8 @@ func (a *AttributeDataTypeValue) marshalClusterID(bb *bitbuffer.BitBuffer) error
 	return bb.WriteUint(uint64(clusterID), bitbuffer.LittleEndian, 16)
 }
 
-func (a *AttributeDataTypeValue) marshalAttributeID(bb *bitbuffer.BitBuffer) error {
-	attributeID, ok := a.Value.(AttributeID)
+func marshalAttributeID(bb *bitbuffer.BitBuffer, v interface{}) error {
+	attributeID, ok := v.(AttributeID)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -396,8 +407,8 @@ func (a *AttributeDataTypeValue) marshalAttributeID(bb *bitbuffer.BitBuffer) err
 	return bb.WriteUint(uint64(attributeID), bitbuffer.LittleEndian, 16)
 }
 
-func (a *AttributeDataTypeValue) marshalIEEEAddress(bb *bitbuffer.BitBuffer) error {
-	ieeeAddress, ok := a.Value.(zigbee.IEEEAddress)
+func marshalIEEEAddress(bb *bitbuffer.BitBuffer, v interface{}) error {
+	ieeeAddress, ok := v.(zigbee.IEEEAddress)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -406,8 +417,8 @@ func (a *AttributeDataTypeValue) marshalIEEEAddress(bb *bitbuffer.BitBuffer) err
 	return bb.WriteUint(uint64(ieeeAddress), bitbuffer.LittleEndian, 64)
 }
 
-func (a *AttributeDataTypeValue) marshalSecurityKey(bb *bitbuffer.BitBuffer) error {
-	networkKey, ok := a.Value.(zigbee.NetworkKey)
+func marshalSecurityKey(bb *bitbuffer.BitBuffer, v interface{}) error {
+	networkKey, ok := v.(zigbee.NetworkKey)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -416,8 +427,8 @@ func (a *AttributeDataTypeValue) marshalSecurityKey(bb *bitbuffer.BitBuffer) err
 	return bytecodec.MarshalToBitBuffer(bb, &networkKey)
 }
 
-func (a *AttributeDataTypeValue) marshalBACnetOID(bb *bitbuffer.BitBuffer) error {
-	oid, ok := a.Value.(BACnetOID)
+func marshalBACnetOID(bb *bitbuffer.BitBuffer, v interface{}) error {
+	oid, ok := v.(BACnetOID)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -426,8 +437,8 @@ func (a *AttributeDataTypeValue) marshalBACnetOID(bb *bitbuffer.BitBuffer) error
 	return bb.WriteUint(uint64(oid), bitbuffer.LittleEndian, 32)
 }
 
-func (a *AttributeDataTypeValue) marshalStructure(bb *bitbuffer.BitBuffer) error {
-	values, ok := a.Value.([]AttributeDataTypeValue)
+func marshalStructure(bb *bitbuffer.BitBuffer, v interface{}) error {
+	values, ok := v.([]AttributeDataTypeValue)
 
 	if !ok {
 		return errors.New("could not cast value")
@@ -446,6 +457,30 @@ func (a *AttributeDataTypeValue) marshalStructure(bb *bitbuffer.BitBuffer) error
 	return nil
 }
 
+func marshalSlice(bb *bitbuffer.BitBuffer, v interface{}) error {
+	slice, ok := v.(AttributeSlice)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	if err := bb.WriteByte(byte(slice.DataType)); err != nil {
+		return err
+	}
+
+	if err := bb.WriteUint(uint64(len(slice.Values)), bitbuffer.LittleEndian, 16); err != nil {
+		return err
+	}
+
+	for i := 0; i < len(slice.Values); i++ {
+		if err := marshalZCLType(bb, slice.DataType, slice.Values[i]); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -453,275 +488,267 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		a.DataType = AttributeDataType(dt)
 	}
 
-	switch a.DataType {
+	val, err := unmarshalZCLType(bb, a.DataType)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = val
+
+	return nil
+}
+
+func unmarshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType) (interface{}, error) {
+	switch dt {
 	case TypeNull:
-		return nil
+		return nil, nil
 	case TypeData8:
-		return a.unmarshalData(bb, 1)
+		return unmarshalData(bb, 1)
 	case TypeData16:
-		return a.unmarshalData(bb, 2)
+		return unmarshalData(bb, 2)
 	case TypeData24:
-		return a.unmarshalData(bb, 3)
+		return unmarshalData(bb, 3)
 	case TypeData32:
-		return a.unmarshalData(bb, 4)
+		return unmarshalData(bb, 4)
 	case TypeData40:
-		return a.unmarshalData(bb, 5)
+		return unmarshalData(bb, 5)
 	case TypeData48:
-		return a.unmarshalData(bb, 6)
+		return unmarshalData(bb, 6)
 	case TypeData56:
-		return a.unmarshalData(bb, 7)
+		return unmarshalData(bb, 7)
 	case TypeData64:
-		return a.unmarshalData(bb, 8)
+		return unmarshalData(bb, 8)
 	case TypeBoolean:
-		return a.unmarshalBoolean(bb)
+		return unmarshalBoolean(bb)
 	case TypeBitmap8:
-		return a.unmarshalUint(bb, 8)
+		return unmarshalUint(bb, 8)
 	case TypeBitmap16:
-		return a.unmarshalUint(bb, 16)
+		return unmarshalUint(bb, 16)
 	case TypeBitmap24:
-		return a.unmarshalUint(bb, 24)
+		return unmarshalUint(bb, 24)
 	case TypeBitmap32:
-		return a.unmarshalUint(bb, 32)
+		return unmarshalUint(bb, 32)
 	case TypeBitmap40:
-		return a.unmarshalUint(bb, 40)
+		return unmarshalUint(bb, 40)
 	case TypeBitmap48:
-		return a.unmarshalUint(bb, 48)
+		return unmarshalUint(bb, 48)
 	case TypeBitmap56:
-		return a.unmarshalUint(bb, 56)
+		return unmarshalUint(bb, 56)
 	case TypeBitmap64:
-		return a.unmarshalUint(bb, 64)
+		return unmarshalUint(bb, 64)
 	case TypeUnsignedInt8:
-		return a.unmarshalUint(bb, 8)
+		return unmarshalUint(bb, 8)
 	case TypeUnsignedInt16:
-		return a.unmarshalUint(bb, 16)
+		return unmarshalUint(bb, 16)
 	case TypeUnsignedInt24:
-		return a.unmarshalUint(bb, 24)
+		return unmarshalUint(bb, 24)
 	case TypeUnsignedInt32:
-		return a.unmarshalUint(bb, 32)
+		return unmarshalUint(bb, 32)
 	case TypeUnsignedInt40:
-		return a.unmarshalUint(bb, 40)
+		return unmarshalUint(bb, 40)
 	case TypeUnsignedInt48:
-		return a.unmarshalUint(bb, 48)
+		return unmarshalUint(bb, 48)
 	case TypeUnsignedInt56:
-		return a.unmarshalUint(bb, 56)
+		return unmarshalUint(bb, 56)
 	case TypeUnsignedInt64:
-		return a.unmarshalUint(bb, 64)
+		return unmarshalUint(bb, 64)
 	case TypeSignedInt8:
-		return a.unmarshalInt(bb, 8)
+		return unmarshalInt(bb, 8)
 	case TypeSignedInt16:
-		return a.unmarshalInt(bb, 16)
+		return unmarshalInt(bb, 16)
 	case TypeSignedInt24:
-		return a.unmarshalInt(bb, 24)
+		return unmarshalInt(bb, 24)
 	case TypeSignedInt32:
-		return a.unmarshalInt(bb, 32)
+		return unmarshalInt(bb, 32)
 	case TypeSignedInt40:
-		return a.unmarshalInt(bb, 40)
+		return unmarshalInt(bb, 40)
 	case TypeSignedInt48:
-		return a.unmarshalInt(bb, 48)
+		return unmarshalInt(bb, 48)
 	case TypeSignedInt56:
-		return a.unmarshalInt(bb, 56)
+		return unmarshalInt(bb, 56)
 	case TypeSignedInt64:
-		return a.unmarshalInt(bb, 64)
+		return unmarshalInt(bb, 64)
 	case TypeEnum8:
-		if err := a.unmarshalUint(bb, 8); err != nil {
-			return err
-		} else {
-			a.Value = uint8(a.Value.(uint64))
-			return nil
+		val, err := unmarshalUint(bb, 8)
+
+		if err == nil {
+			val = uint8(val.(uint64))
 		}
+
+		return val, err
 	case TypeEnum16:
-		if err := a.unmarshalUint(bb, 16); err != nil {
-			return err
-		} else {
-			a.Value = uint16(a.Value.(uint64))
-			return nil
+		val, err := unmarshalUint(bb, 16)
+
+		if err == nil {
+			val = uint16(val.(uint64))
 		}
+
+		return val, err
 	case TypeStringOctet8:
-		return a.unmarshalString(bb, 8)
+		return unmarshalString(bb, 8)
 	case TypeStringOctet16:
-		return a.unmarshalString(bb, 16)
+		return unmarshalString(bb, 16)
 	case TypeTimeOfDay:
-		return a.unmarshalTimeOfDay(bb)
+		return unmarshalTimeOfDay(bb)
 	case TypeDate:
-		return a.unmarshalDate(bb)
+		return unmarshalDate(bb)
 	case TypeUTCTime:
-		return a.unmarshalUTCTime(bb)
+		return unmarshalUTCTime(bb)
 	case TypeClusterID:
-		return a.unmarshalClusterID(bb)
+		return unmarshalClusterID(bb)
 	case TypeAttributeID:
-		return a.unmarshalAttributeID(bb)
+		return unmarshalAttributeID(bb)
 	case TypeIEEEAddress:
-		return a.unmarshalIEEEAddress(bb)
+		return unmarshalIEEEAddress(bb)
 	case TypeSecurityKey128:
-		return a.unmarshalSecurityKey(bb)
+		return unmarshalSecurityKey(bb)
 	case TypeBACnetOID:
-		return a.unmarshalBACnetOID(bb)
+		return unmarshalBACnetOID(bb)
 	case TypeStructure:
-		return a.unmarshalStructure(bb)
+		return unmarshalStructure(bb)
+	case TypeArray, TypeSet, TypeBag:
+		return unmarshalSlice(bb)
 	default:
-		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
+		return nil, fmt.Errorf("unsupported ZCL type to unmarshal: %d", dt)
 	}
 }
 
-func (a *AttributeDataTypeValue) unmarshalData(bb *bitbuffer.BitBuffer, size int) error {
+func unmarshalData(bb *bitbuffer.BitBuffer, size int) (interface{}, error) {
 	data := make([]byte, size)
 
 	for i := size - 1; i >= 0; i-- {
 		if b, err := bb.ReadByte(); err != nil {
-			return err
+			return nil, err
 		} else {
 			data[i] = b
 		}
 	}
 
-	a.Value = data
-
-	return nil
+	return data, nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalBoolean(bb *bitbuffer.BitBuffer) error {
+func unmarshalBoolean(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	if data, err := bb.ReadByte(); err != nil {
-		return err
+		return nil, err
 	} else {
-		a.Value = data != 0x00
-		return nil
+		return data != 0x00, nil
 	}
 }
 
-func (a *AttributeDataTypeValue) unmarshalUint(bb *bitbuffer.BitBuffer, bitsize int) error {
+func unmarshalUint(bb *bitbuffer.BitBuffer, bitsize int) (interface{}, error) {
 	v, err := bb.ReadUint(bitbuffer.LittleEndian, bitsize)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = v
-
-	return nil
+	return v, nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalInt(bb *bitbuffer.BitBuffer, bitsize int) error {
+func unmarshalInt(bb *bitbuffer.BitBuffer, bitsize int) (interface{}, error) {
 	v, err := bb.ReadInt(bitbuffer.LittleEndian, bitsize)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = v
-
-	return nil
+	return v, nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalString(bb *bitbuffer.BitBuffer, bitsize int) error {
+func unmarshalString(bb *bitbuffer.BitBuffer, bitsize int) (interface{}, error) {
 	if data, err := bb.ReadStringLengthPrefixed(bitbuffer.LittleEndian, bitsize); err != nil {
-		return err
+		return nil, err
 	} else {
-		a.Value = data
-		return nil
+		return data, nil
 	}
 }
 
-func (a *AttributeDataTypeValue) unmarshalTimeOfDay(bb *bitbuffer.BitBuffer) error {
+func unmarshalTimeOfDay(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	tod := TimeOfDay{}
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, &tod); err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = tod
-
-	return nil
+	return tod, nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalDate(bb *bitbuffer.BitBuffer) error {
+func unmarshalDate(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	date := Date{}
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, &date); err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = date
-
-	return nil
+	return date, nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalUTCTime(bb *bitbuffer.BitBuffer) error {
+func unmarshalUTCTime(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	v, err := bb.ReadInt(bitbuffer.LittleEndian, 32)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = UTCTime(v)
-
-	return nil
+	return UTCTime(v), nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalClusterID(bb *bitbuffer.BitBuffer) error {
+func unmarshalClusterID(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	v, err := bb.ReadInt(bitbuffer.LittleEndian, 16)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = zigbee.ClusterID(v)
-
-	return nil
+	return zigbee.ClusterID(v), nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalAttributeID(bb *bitbuffer.BitBuffer) error {
+func unmarshalAttributeID(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	v, err := bb.ReadInt(bitbuffer.LittleEndian, 16)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = AttributeID(v)
-
-	return nil
+	return AttributeID(v), nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalIEEEAddress(bb *bitbuffer.BitBuffer) error {
+func unmarshalIEEEAddress(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	v, err := bb.ReadInt(bitbuffer.LittleEndian, 64)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = zigbee.IEEEAddress(v)
-
-	return nil
+	return zigbee.IEEEAddress(v), nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalSecurityKey(bb *bitbuffer.BitBuffer) error {
+func unmarshalSecurityKey(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	networkKey := zigbee.NetworkKey{}
 
 	if err := bytecodec.UnmarshalFromBitBuffer(bb, &networkKey); err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = networkKey
-
-	return nil
+	return networkKey, nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalBACnetOID(bb *bitbuffer.BitBuffer) error {
+func unmarshalBACnetOID(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	v, err := bb.ReadInt(bitbuffer.LittleEndian, 32)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	a.Value = BACnetOID(v)
-
-	return nil
+	return BACnetOID(v), nil
 }
 
-func (a *AttributeDataTypeValue) unmarshalStructure(bb *bitbuffer.BitBuffer) error {
+func unmarshalStructure(bb *bitbuffer.BitBuffer) (interface{}, error) {
 	itemCount, err := bb.ReadUint(bitbuffer.LittleEndian, 16)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	values := []AttributeDataTypeValue{}
@@ -730,15 +757,44 @@ func (a *AttributeDataTypeValue) unmarshalStructure(bb *bitbuffer.BitBuffer) err
 		val := AttributeDataTypeValue{}
 
 		if err := val.Unmarshal(bb); err != nil {
-			return err
+			return nil, err
 		}
 
 		values = append(values, val)
 	}
 
-	a.Value = values
+	return values, nil
+}
 
-	return nil
+func unmarshalSlice(bb *bitbuffer.BitBuffer) (interface{}, error) {
+	rawType, err := bb.ReadUint(bitbuffer.LittleEndian, 8)
+
+	if err != nil {
+		return nil, err
+	}
+
+	itemCount, err := bb.ReadUint(bitbuffer.LittleEndian, 16)
+
+	if err != nil {
+		return nil, err
+	}
+
+	itemType := AttributeDataType(rawType)
+
+	value := AttributeSlice{
+		DataType: itemType,
+		Values:   []interface{}{},
+	}
+
+	for i := 0; i < int(itemCount); i++ {
+		if val, err := unmarshalZCLType(bb, itemType); err != nil {
+			return nil, err
+		} else {
+			value.Values = append(value.Values, val)
+		}
+	}
+
+	return value, nil
 }
 
 type BACnetOID uint32
