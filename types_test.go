@@ -667,4 +667,48 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of time of day", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeTimeOfDay,
+			Value: TimeOfDay{
+				Hours:      1,
+				Minutes:    2,
+				Seconds:    3,
+				Hundredths: 4,
+			},
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xe0, 0x01, 0x02, 0x03, 0x04}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of date", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeDate,
+			Value: Date{
+				Year:       1,
+				Month:      2,
+				DayOfMonth: 3,
+				DayOfWeek:  4,
+			},
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xe1, 0x01, 0x02, 0x03, 0x04}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }

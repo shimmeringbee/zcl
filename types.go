@@ -3,6 +3,7 @@ package zcl
 import (
 	"errors"
 	"fmt"
+	"github.com/shimmeringbee/bytecodec"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
 )
 
@@ -243,6 +244,10 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalString(bb, 8)
 	case TypeStringOctet16:
 		return a.marshalString(bb, 16)
+	case TypeTimeOfDay:
+		return a.marshalTimeOfDay(bb)
+	case TypeDate:
+		return a.marshalDate(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -324,6 +329,26 @@ func (a *AttributeDataTypeValue) marshalString(bb *bitbuffer.BitBuffer, bitsize 
 	}
 
 	return bb.WriteStringLengthPrefixed(data, bitbuffer.LittleEndian, bitsize)
+}
+
+func (a *AttributeDataTypeValue) marshalTimeOfDay(bb *bitbuffer.BitBuffer) error {
+	tod, ok := a.Value.(TimeOfDay)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bytecodec.MarshalToBitBuffer(bb, &tod)
+}
+
+func (a *AttributeDataTypeValue) marshalDate(bb *bitbuffer.BitBuffer) error {
+	date, ok := a.Value.(Date)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bytecodec.MarshalToBitBuffer(bb, &date)
 }
 
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
@@ -420,6 +445,10 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalString(bb, 8)
 	case TypeStringOctet16:
 		return a.unmarshalString(bb, 16)
+	case TypeTimeOfDay:
+		return a.unmarshalTimeOfDay(bb)
+	case TypeDate:
+		return a.unmarshalDate(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -481,4 +510,42 @@ func (a *AttributeDataTypeValue) unmarshalString(bb *bitbuffer.BitBuffer, bitsiz
 		a.Value = data
 		return nil
 	}
+}
+
+func (a *AttributeDataTypeValue) unmarshalTimeOfDay(bb *bitbuffer.BitBuffer) error {
+	tod := TimeOfDay{}
+
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, &tod); err != nil {
+		return err
+	}
+
+	a.Value = tod
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalDate(bb *bitbuffer.BitBuffer) error {
+	date := Date{}
+
+	if err := bytecodec.UnmarshalFromBitBuffer(bb, &date); err != nil {
+		return err
+	}
+
+	a.Value = date
+
+	return nil
+}
+
+type TimeOfDay struct {
+	Hours      uint8
+	Minutes    uint8
+	Seconds    uint8
+	Hundredths uint8
+}
+
+type Date struct {
+	Year       uint8
+	Month      uint8
+	DayOfMonth uint8
+	DayOfWeek  uint8
 }
