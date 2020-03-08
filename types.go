@@ -255,6 +255,10 @@ func marshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType, v interface{}
 		return marshalString(bb, v, 8)
 	case TypeStringOctet16:
 		return marshalString(bb, v, 16)
+	case TypeStringCharacter8:
+		return marshalStringRune(bb, v, 8)
+	case TypeStringCharacter16:
+		return marshalStringRune(bb, v, 16)
 	case TypeTimeOfDay:
 		return marshalTimeOfDay(bb, v)
 	case TypeDate:
@@ -360,6 +364,26 @@ func marshalString(bb *bitbuffer.BitBuffer, v interface{}, bitsize int) error {
 	}
 
 	return bb.WriteStringLengthPrefixed(data, bitbuffer.LittleEndian, bitsize)
+}
+
+func marshalStringRune(bb *bitbuffer.BitBuffer, v interface{}, bitsize int) error {
+	data, ok := v.(string)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	if err := bb.WriteUint(uint64(len([]rune(data))), bitbuffer.LittleEndian, bitsize); err != nil {
+		return err
+	}
+
+	for i := 0; i < len(data); i++ {
+		if err := bb.WriteByte(data[i]); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func marshalTimeOfDay(bb *bitbuffer.BitBuffer, v interface{}) error {
@@ -618,6 +642,10 @@ func unmarshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType) (interface{
 		return unmarshalString(bb, 8)
 	case TypeStringOctet16:
 		return unmarshalString(bb, 16)
+	case TypeStringCharacter8:
+		return unmarshalStringRune(bb, 8)
+	case TypeStringCharacter16:
+		return unmarshalStringRune(bb, 16)
 	case TypeTimeOfDay:
 		return unmarshalTimeOfDay(bb)
 	case TypeDate:
@@ -695,6 +723,48 @@ func unmarshalString(bb *bitbuffer.BitBuffer, bitsize int) (interface{}, error) 
 	} else {
 		return data, nil
 	}
+}
+
+func unmarshalStringRune(bb *bitbuffer.BitBuffer, bitsize int) (interface{}, error) {
+	runeCount, err := bb.ReadUint(bitbuffer.LittleEndian, bitsize)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var data []byte
+
+	for i := 0; i < int(runeCount); i++ {
+		b, err := bb.ReadByte()
+
+		if err != nil {
+			return nil, err
+		}
+
+		data = append(data, b)
+
+		if b > 0x80 {
+			moreBytes := 0
+
+			if b < 0b1110000 {
+				moreBytes = 1
+			} else if b >= 0b1110000 && b < 0b11110000 {
+				moreBytes = 2
+			} else {
+				moreBytes = 3
+			}
+
+			for i := 0; i < moreBytes; i++ {
+				if b, err := bb.ReadByte(); err != nil {
+					return nil, err
+				} else {
+					data = append(data, b)
+				}
+			}
+		}
+	}
+
+	return string(data), nil
 }
 
 func unmarshalTimeOfDay(bb *bitbuffer.BitBuffer) (interface{}, error) {
