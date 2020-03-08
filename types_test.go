@@ -711,4 +711,21 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of utc time", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeUTCTime,
+			Value:    UTCTime(0x01020304),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xe2, 0x04, 0x03, 0x02, 0x01}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }

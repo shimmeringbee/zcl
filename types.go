@@ -248,6 +248,8 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalTimeOfDay(bb)
 	case TypeDate:
 		return a.marshalDate(bb)
+	case TypeUTCTime:
+		return a.marshalUTCTime(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -351,6 +353,16 @@ func (a *AttributeDataTypeValue) marshalDate(bb *bitbuffer.BitBuffer) error {
 	return bytecodec.MarshalToBitBuffer(bb, &date)
 }
 
+func (a *AttributeDataTypeValue) marshalUTCTime(bb *bitbuffer.BitBuffer) error {
+	utcTime, ok := a.Value.(UTCTime)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bb.WriteUint(uint64(utcTime), bitbuffer.LittleEndian, 32)
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -449,6 +461,8 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalTimeOfDay(bb)
 	case TypeDate:
 		return a.unmarshalDate(bb)
+	case TypeUTCTime:
+		return a.unmarshalUTCTime(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -536,6 +550,18 @@ func (a *AttributeDataTypeValue) unmarshalDate(bb *bitbuffer.BitBuffer) error {
 	return nil
 }
 
+func (a *AttributeDataTypeValue) unmarshalUTCTime(bb *bitbuffer.BitBuffer) error {
+	v, err := bb.ReadInt(bitbuffer.LittleEndian, 32)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = UTCTime(v)
+
+	return nil
+}
+
 type TimeOfDay struct {
 	Hours      uint8
 	Minutes    uint8
@@ -549,3 +575,5 @@ type Date struct {
 	DayOfMonth uint8
 	DayOfWeek  uint8
 }
+
+type UTCTime uint32
