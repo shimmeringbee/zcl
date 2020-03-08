@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/shimmeringbee/bytecodec"
 	"github.com/shimmeringbee/bytecodec/bitbuffer"
+	"github.com/shimmeringbee/zigbee"
 )
 
 /*
@@ -250,6 +251,12 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalDate(bb)
 	case TypeUTCTime:
 		return a.marshalUTCTime(bb)
+	case TypeClusterID:
+		return a.marshalClusterID(bb)
+	case TypeAttributeID:
+		return a.marshalAttributeID(bb)
+	case TypeIEEEAddress:
+		return a.marshalIEEEAddress(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -363,6 +370,36 @@ func (a *AttributeDataTypeValue) marshalUTCTime(bb *bitbuffer.BitBuffer) error {
 	return bb.WriteUint(uint64(utcTime), bitbuffer.LittleEndian, 32)
 }
 
+func (a *AttributeDataTypeValue) marshalClusterID(bb *bitbuffer.BitBuffer) error {
+	clusterID, ok := a.Value.(zigbee.ClusterID)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bb.WriteUint(uint64(clusterID), bitbuffer.LittleEndian, 16)
+}
+
+func (a *AttributeDataTypeValue) marshalAttributeID(bb *bitbuffer.BitBuffer) error {
+	attributeID, ok := a.Value.(AttributeIdentifier)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bb.WriteUint(uint64(attributeID), bitbuffer.LittleEndian, 16)
+}
+
+func (a *AttributeDataTypeValue) marshalIEEEAddress(bb *bitbuffer.BitBuffer) error {
+	ieeeAddress, ok := a.Value.(zigbee.IEEEAddress)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bb.WriteUint(uint64(ieeeAddress), bitbuffer.LittleEndian, 64)
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -463,6 +500,12 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalDate(bb)
 	case TypeUTCTime:
 		return a.unmarshalUTCTime(bb)
+	case TypeClusterID:
+		return a.unmarshalClusterID(bb)
+	case TypeAttributeID:
+		return a.unmarshalAttributeID(bb)
+	case TypeIEEEAddress:
+		return a.unmarshalIEEEAddress(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -558,6 +601,42 @@ func (a *AttributeDataTypeValue) unmarshalUTCTime(bb *bitbuffer.BitBuffer) error
 	}
 
 	a.Value = UTCTime(v)
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalClusterID(bb *bitbuffer.BitBuffer) error {
+	v, err := bb.ReadInt(bitbuffer.LittleEndian, 16)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = zigbee.ClusterID(v)
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalAttributeID(bb *bitbuffer.BitBuffer) error {
+	v, err := bb.ReadInt(bitbuffer.LittleEndian, 16)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = AttributeIdentifier(v)
+
+	return nil
+}
+
+func (a *AttributeDataTypeValue) unmarshalIEEEAddress(bb *bitbuffer.BitBuffer) error {
+	v, err := bb.ReadInt(bitbuffer.LittleEndian, 64)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = zigbee.IEEEAddress(v)
 
 	return nil
 }

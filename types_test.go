@@ -2,6 +2,7 @@ package zcl
 
 import (
 	"github.com/shimmeringbee/bytecodec"
+	"github.com/shimmeringbee/zigbee"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -719,6 +720,57 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		}
 		actualValue := &AttributeDataTypeValue{}
 		expectedBytes := []byte{0xe2, 0x04, 0x03, 0x02, 0x01}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of cluster ID", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeClusterID,
+			Value:    zigbee.ClusterID(0x0102),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xe9, 0x02, 0x01}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of attribute ID", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeAttributeID,
+			Value:    AttributeIdentifier(0x0102),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xea, 0x02, 0x01}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of IEEE address", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeIEEEAddress,
+			Value:    zigbee.IEEEAddress(0x0102030405060708),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xf0, 0x08, 0x07, 0x06, 0x05, 0x04, 0x03, 0x02, 0x01}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
