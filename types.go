@@ -259,6 +259,8 @@ func (a *AttributeDataTypeValue) Marshal(bb *bitbuffer.BitBuffer) error {
 		return a.marshalIEEEAddress(bb)
 	case TypeSecurityKey128:
 		return a.marshalSecurityKey(bb)
+	case TypeBACnetOID:
+		return a.marshalBACnetOID(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to marshal: %d", a.DataType)
 	}
@@ -412,6 +414,16 @@ func (a *AttributeDataTypeValue) marshalSecurityKey(bb *bitbuffer.BitBuffer) err
 	return bytecodec.MarshalToBitBuffer(bb, &networkKey)
 }
 
+func (a *AttributeDataTypeValue) marshalBACnetOID(bb *bitbuffer.BitBuffer) error {
+	oid, ok := a.Value.(BACnetOID)
+
+	if !ok {
+		return errors.New("could not cast value")
+	}
+
+	return bb.WriteUint(uint64(oid), bitbuffer.LittleEndian, 32)
+}
+
 func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 	if dt, err := bb.ReadByte(); err != nil {
 		return err
@@ -520,6 +532,8 @@ func (a *AttributeDataTypeValue) Unmarshal(bb *bitbuffer.BitBuffer) error {
 		return a.unmarshalIEEEAddress(bb)
 	case TypeSecurityKey128:
 		return a.unmarshalSecurityKey(bb)
+	case TypeBACnetOID:
+		return a.unmarshalBACnetOID(bb)
 	default:
 		return fmt.Errorf("unsupported ZCL type to unmarshal: %d", a.DataType)
 	}
@@ -666,6 +680,20 @@ func (a *AttributeDataTypeValue) unmarshalSecurityKey(bb *bitbuffer.BitBuffer) e
 
 	return nil
 }
+
+func (a *AttributeDataTypeValue) unmarshalBACnetOID(bb *bitbuffer.BitBuffer) error {
+	v, err := bb.ReadInt(bitbuffer.LittleEndian, 32)
+
+	if err != nil {
+		return err
+	}
+
+	a.Value = BACnetOID(v)
+
+	return nil
+}
+
+type BACnetOID uint32
 
 type TimeOfDay struct {
 	Hours      uint8

@@ -797,4 +797,21 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedValue, actualValue)
 	})
+
+	t.Run("marshaling and unmarshaling of BACnet OID", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeBACnetOID,
+			Value:    BACnetOID(0x01020304),
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0xeb, 0x04, 0x03, 0x02, 0x01}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
 }
