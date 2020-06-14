@@ -7,6 +7,7 @@ import (
 	"github.com/shimmeringbee/zcl"
 	"github.com/shimmeringbee/zigbee"
 	"sync"
+	"sync/atomic"
 )
 
 type MessageWithSource struct {
@@ -14,10 +15,26 @@ type MessageWithSource struct {
 	Message       zcl.Message
 }
 
+type Matcher func(address zigbee.IEEEAddress, appMsg zigbee.ApplicationMessage, zclMessage zcl.Message) bool
+
+func AddressAndSequenceMatch(matchAddress zigbee.IEEEAddress, matchSequence uint8) Matcher {
+	return func(address zigbee.IEEEAddress, appMsg zigbee.ApplicationMessage, zclMessage zcl.Message) bool {
+		return matchAddress == address && matchSequence == zclMessage.TransactionSequence
+	}
+}
+
+func (c *Communicator) NewMatch(matcher Matcher, callback func(source MessageWithSource)) Match {
+	return Match{
+		Id:       atomic.AddUint64(c.matchId, 1),
+		Matcher:  matcher,
+		Callback: callback,
+	}
+}
+
 type Match struct {
-	Address  zigbee.IEEEAddress
-	Sequence uint8
-	Fn       func(zcl.Message)
+	Id       uint64
+	Matcher  Matcher
+	Callback func(source MessageWithSource)
 }
 
 type Communicator struct {
@@ -27,7 +44,8 @@ type Communicator struct {
 	readableMessages chan MessageWithSource
 
 	mutex   *sync.RWMutex
-	matches []Match
+	matches map[uint64]Match
+	matchId *uint64
 }
 
 const DefaultMessagesToBeRead = 50
@@ -38,6 +56,8 @@ func NewCommunicator(provider zigbee.Provider, registry *zcl.CommandRegistry) *C
 		CommandRegistry:  registry,
 		readableMessages: make(chan MessageWithSource, DefaultMessagesToBeRead),
 		mutex:            &sync.RWMutex{},
+		matches:          map[uint64]Match{},
+		matchId:          new(uint64),
 	}
 }
 
@@ -49,12 +69,17 @@ func (c *Communicator) ProcessIncomingMessage(msg zigbee.NodeIncomingMessageEven
 	}
 
 	c.mutex.RLock()
-	for _, match := range c.matches {
-		if match.Address == msg.IEEEAddress && match.Sequence == message.TransactionSequence {
-			go match.Fn(message)
+	ourMatches := c.matches
+	c.mutex.RUnlock()
+
+	for _, match := range ourMatches {
+		if match.Matcher(msg.IEEEAddress, msg.ApplicationMessage, message) {
+			go match.Callback(MessageWithSource{
+				SourceAddress: msg.IEEEAddress,
+				Message:       message,
+			})
 		}
 	}
-	c.mutex.RUnlock()
 
 	select {
 	case c.readableMessages <- MessageWithSource{
@@ -81,21 +106,14 @@ func (c *Communicator) addMatch(match Match) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	c.matches = append(c.matches, match)
+	c.matches[match.Id] = match
 }
 
 func (c *Communicator) removeMatch(match Match) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	originalMatches := c.matches
-	c.matches = []Match{}
-
-	for _, iMatch := range originalMatches {
-		if match.Address != iMatch.Address || match.Sequence != iMatch.Sequence {
-			c.matches = append(c.matches, iMatch)
-		}
-	}
+	delete(c.matches, match.Id)
 }
 
 func (c *Communicator) Request(ctx context.Context, address zigbee.IEEEAddress, message zcl.Message) error {
@@ -117,13 +135,10 @@ func (c *Communicator) Request(ctx context.Context, address zigbee.IEEEAddress, 
 func (c *Communicator) RequestResponse(ctx context.Context, address zigbee.IEEEAddress, message zcl.Message) (zcl.Message, error) {
 	ch := make(chan zcl.Message, 1)
 
-	match := Match{
-		Address:  address,
-		Sequence: message.TransactionSequence,
-		Fn: func(recvMessage zcl.Message) {
-			ch <- recvMessage
-		},
-	}
+	match := c.NewMatch(AddressAndSequenceMatch(address, message.TransactionSequence),
+		func(recvMessage MessageWithSource) {
+			ch <- recvMessage.Message
+		})
 
 	c.addMatch(match)
 	defer c.removeMatch(match)

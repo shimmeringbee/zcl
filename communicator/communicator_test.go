@@ -108,6 +108,8 @@ func TestCommunicator_ProcessIncomingMessage(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, expectedIEEE, messageWithSource.SourceAddress)
 		assert.Equal(t, expectedMessage, messageWithSource.Message)
+
+		assert.Equal(t, 0, len(c.matches))
 	})
 }
 
