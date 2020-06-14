@@ -8,7 +8,7 @@ import (
 	"github.com/shimmeringbee/zigbee"
 )
 
-func Unmarshal(cr *CommandRegistry, appMsg zigbee.ApplicationMessage) (Message, error) {
+func (cr *CommandRegistry) Unmarshal(appMsg zigbee.ApplicationMessage) (Message, error) {
 	header := Header{}
 	var command interface{}
 

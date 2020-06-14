@@ -7,7 +7,7 @@ import (
 	"github.com/shimmeringbee/zigbee"
 )
 
-func Marshal(cr *CommandRegistry, message Message) (zigbee.ApplicationMessage, error) {
+func (cr *CommandRegistry) Marshal(message Message) (zigbee.ApplicationMessage, error) {
 	bb := bitbuffer.NewBitBuffer()
 
 	header := Header{

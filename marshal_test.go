@@ -40,7 +40,7 @@ func Test_Marshal(t *testing.T) {
 			Data:                []byte{0b00000100, 0x20, 0x10, 0x40, 0xcc, 0xaa},
 		}
 
-		actualOut, err := Marshal(cr, in)
+		actualOut, err := cr.Marshal(in)
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedOut, actualOut)
@@ -67,7 +67,7 @@ func Test_Marshal(t *testing.T) {
 			Data:                []byte{0b00000000, 0x40, 0xcc, 0xaa},
 		}
 
-		actualOut, err := Marshal(cr, in)
+		actualOut, err := cr.Marshal(in)
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedOut, actualOut)
@@ -94,7 +94,7 @@ func Test_Marshal(t *testing.T) {
 			Data:                []byte{0b00000101, 0x20, 0x10, 0x40, 0xcc, 0xaa},
 		}
 
-		actualOut, err := Marshal(cr, in)
+		actualOut, err := cr.Marshal(in)
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedOut, actualOut)

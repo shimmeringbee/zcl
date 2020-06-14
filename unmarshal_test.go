@@ -27,7 +27,7 @@ func Test_Unmarshal(t *testing.T) {
 			Data:                []byte{0b00000100, 0x20, 0x10, 0x40, 0xff},
 		}
 
-		_, err := Unmarshal(cr, in)
+		_, err := cr.Unmarshal(in)
 		assert.Error(t, err)
 	})
 
@@ -52,7 +52,7 @@ func Test_Unmarshal(t *testing.T) {
 			},
 		}
 
-		actualMessage, err := Unmarshal(cr, in)
+		actualMessage, err := cr.Unmarshal(in)
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedMessage, actualMessage)
@@ -79,7 +79,7 @@ func Test_Unmarshal(t *testing.T) {
 			},
 		}
 
-		actualMessage, err := Unmarshal(cr, in)
+		actualMessage, err := cr.Unmarshal(in)
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedMessage, actualMessage)
@@ -106,7 +106,7 @@ func Test_Unmarshal(t *testing.T) {
 			},
 		}
 
-		actualMessage, err := Unmarshal(cr, in)
+		actualMessage, err := cr.Unmarshal(in)
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedMessage, actualMessage)
