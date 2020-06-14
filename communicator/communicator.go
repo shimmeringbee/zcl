@@ -41,23 +41,18 @@ type Communicator struct {
 	Provider        zigbee.Provider
 	CommandRegistry *zcl.CommandRegistry
 
-	readableMessages chan MessageWithSource
-
 	mutex   *sync.RWMutex
 	matches map[uint64]Match
 	matchId *uint64
 }
 
-const DefaultMessagesToBeRead = 50
-
 func NewCommunicator(provider zigbee.Provider, registry *zcl.CommandRegistry) *Communicator {
 	return &Communicator{
-		Provider:         provider,
-		CommandRegistry:  registry,
-		readableMessages: make(chan MessageWithSource, DefaultMessagesToBeRead),
-		mutex:            &sync.RWMutex{},
-		matches:          map[uint64]Match{},
-		matchId:          new(uint64),
+		Provider:        provider,
+		CommandRegistry: registry,
+		mutex:           &sync.RWMutex{},
+		matches:         map[uint64]Match{},
+		matchId:         new(uint64),
 	}
 }
 
@@ -81,25 +76,7 @@ func (c *Communicator) ProcessIncomingMessage(msg zigbee.NodeIncomingMessageEven
 		}
 	}
 
-	select {
-	case c.readableMessages <- MessageWithSource{
-		SourceAddress: msg.IEEEAddress,
-		Message:       message,
-	}:
-	default:
-		return fmt.Errorf("ZCL communicator readable message channel is full")
-	}
-
 	return nil
-}
-
-func (c *Communicator) ReadMessage(ctx context.Context) (MessageWithSource, error) {
-	select {
-	case message := <-c.readableMessages:
-		return message, nil
-	case <-ctx.Done():
-		return MessageWithSource{}, fmt.Errorf("ZCL communicator read message context expired")
-	}
 }
 
 func (c *Communicator) AddCallback(match Match) {
