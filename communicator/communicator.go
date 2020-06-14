@@ -102,14 +102,14 @@ func (c *Communicator) ReadMessage(ctx context.Context) (MessageWithSource, erro
 	}
 }
 
-func (c *Communicator) addMatch(match Match) {
+func (c *Communicator) AddCallback(match Match) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
 	c.matches[match.Id] = match
 }
 
-func (c *Communicator) removeMatch(match Match) {
+func (c *Communicator) RemoveCallback(match Match) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
@@ -140,8 +140,8 @@ func (c *Communicator) RequestResponse(ctx context.Context, address zigbee.IEEEA
 			ch <- recvMessage.Message
 		})
 
-	c.addMatch(match)
-	defer c.removeMatch(match)
+	c.AddCallback(match)
+	defer c.RemoveCallback(match)
 
 	if err := c.Request(ctx, address, message); err != nil {
 		return zcl.Message{}, err
