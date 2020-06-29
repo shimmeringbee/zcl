@@ -3,9 +3,8 @@ module github.com/shimmeringbee/zcl
 go 1.14
 
 require (
-	github.com/shimmeringbee/bytecodec v0.0.0-20200304195519-f8afcb18b3d8
-	github.com/shimmeringbee/zigbee v0.0.0-20200504194836-215e705ad90d
-	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/stretchr/testify v1.5.1
-	gopkg.in/yaml.v2 v2.2.8 // indirect
+	github.com/shimmeringbee/bytecodec v0.0.0-20200506071654-36176e93ee63
+	github.com/shimmeringbee/zigbee v0.0.0-20200629072820-0913e1cf9248
+	github.com/stretchr/testify v1.6.1
+	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 )

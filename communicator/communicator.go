@@ -100,7 +100,7 @@ func (c *Communicator) Request(ctx context.Context, address zigbee.IEEEAddress, 
 		return fmt.Errorf("ZCL communicator failed to send message during marshalling: %w", err)
 	}
 
-	err = c.Provider.SendNodeMessageToNode(ctx, address, appMessage)
+	err = c.Provider.SendApplicationMessageToNode(ctx, address, appMessage, false)
 
 	if err != nil {
 		return fmt.Errorf("ZCL communicator failed to send via provider: %w", err)

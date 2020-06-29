@@ -76,7 +76,7 @@ func TestCommunicator_Request(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(message)
 
-		provider.On("SendNodeMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil)
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil)
 
 		err := c.Request(context.Background(), expectedIEEE, message)
 		assert.NoError(t, err)
@@ -109,7 +109,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(requestMessage)
 
-		provider.On("SendNodeMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
@@ -189,7 +189,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(requestMessage)
 
-		provider.On("SendNodeMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
@@ -269,7 +269,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(requestMessage)
 
-		provider.On("SendNodeMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
