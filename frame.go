@@ -28,7 +28,7 @@ type Control struct {
 
 type Header struct {
 	Control             Control
-	Manufacturer        uint16 `bcincludeif:".Control.ManufacturerSpecific"`
+	Manufacturer        zigbee.ManufacturerCode `bcincludeif:".Control.ManufacturerSpecific"`
 	TransactionSequence uint8
 	CommandIdentifier   CommandIdentifier
 }
@@ -37,7 +37,7 @@ type Message struct {
 	FrameType           FrameType
 	Direction           Direction
 	TransactionSequence uint8
-	Manufacturer        uint16
+	Manufacturer        zigbee.ManufacturerCode
 	ClusterID           zigbee.ClusterID
 	SourceEndpoint      zigbee.Endpoint
 	DestinationEndpoint zigbee.Endpoint

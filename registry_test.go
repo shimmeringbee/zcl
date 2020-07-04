@@ -45,7 +45,7 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 		type ThisCommand struct{}
 		expectedIdentifier := CommandIdentifier(1)
 		clusterId := zigbee.ClusterID(0x1020)
-		manufacturer := uint16(0x3040)
+		manufacturer := zigbee.ManufacturerCode(0x3040)
 
 		cr := NewCommandRegistry()
 
@@ -61,7 +61,7 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 		expectedIdentifier := CommandIdentifier(1)
 		expectedType := reflect.TypeOf(&ThisCommand{})
 		clusterId := zigbee.ClusterID(0x1020)
-		manufacturer := uint16(0x3040)
+		manufacturer := zigbee.ManufacturerCode(0x3040)
 
 		cr := NewCommandRegistry()
 

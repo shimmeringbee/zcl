@@ -13,7 +13,7 @@ func Test_Marshal(t *testing.T) {
 
 	clusterID := zigbee.ClusterID(0xbeef)
 	commandID := CommandIdentifier(0xcc)
-	manufacturer := uint16(0x1020)
+	manufacturer := zigbee.ManufacturerCode(0x1020)
 
 	cr := NewCommandRegistry()
 	cr.RegisterGlobal(commandID, &Command{})
