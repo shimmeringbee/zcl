@@ -41,7 +41,7 @@ const (
 	ShadeConfigurationId                   = zigbee.ClusterID(0x0100)
 	DoorLockId                             = zigbee.ClusterID(0x0101)
 	WindowCoveringId                       = zigbee.ClusterID(0x0102)
-	PumpConfigurationandControlId          = zigbee.ClusterID(0x0200)
+	PumpConfigurationAndControlId          = zigbee.ClusterID(0x0200)
 	ThermostatId                           = zigbee.ClusterID(0x0201)
 	FanControlId                           = zigbee.ClusterID(0x0202)
 	DehumidificationControlId              = zigbee.ClusterID(0x0203)
@@ -82,7 +82,7 @@ const (
 	ISO7816TunnelId                        = zigbee.ClusterID(0x0615)
 	RetailTunnelClusterId                  = zigbee.ClusterID(0x0617)
 	PriceId                                = zigbee.ClusterID(0x0700)
-	DemandResponseandLoadControlId         = zigbee.ClusterID(0x0701)
+	DemandResponseAndLoadControlId         = zigbee.ClusterID(0x0701)
 	MeteringId                             = zigbee.ClusterID(0x0702)
 	MessagingId                            = zigbee.ClusterID(0x0703)
 	TunnelingId                            = zigbee.ClusterID(0x0704)
@@ -92,7 +92,7 @@ const (
 	ChattingId                             = zigbee.ClusterID(0x0905)
 	EN50523ApplianceIdentificationId       = zigbee.ClusterID(0x0b00)
 	MeterIdentificationId                  = zigbee.ClusterID(0x0b01)
-	EN50523ApplianceEventsandAlertsId      = zigbee.ClusterID(0x0b02)
+	EN50523ApplianceEventsAndAlertsId      = zigbee.ClusterID(0x0b02)
 	EN50523ApplianceStatisticsId           = zigbee.ClusterID(0x0b03)
 	ElectricalMeasurementId                = zigbee.ClusterID(0x0b04)
 	DiagnosticsId                          = zigbee.ClusterID(0x0b05)
@@ -133,7 +133,7 @@ var ClusterList = map[zigbee.ClusterID]string{
 	ShadeConfigurationId:                   "Shade Configuration",
 	DoorLockId:                             "Door Lock",
 	WindowCoveringId:                       "Window Covering",
-	PumpConfigurationandControlId:          "Pump Configuration and Control",
+	PumpConfigurationAndControlId:          "Pump Configuration and Control",
 	ThermostatId:                           "Thermostat",
 	FanControlId:                           "Fan Control",
 	DehumidificationControlId:              "Dehumidification Control",
@@ -174,7 +174,7 @@ var ClusterList = map[zigbee.ClusterID]string{
 	ISO7816TunnelId:                        "ISO7816 Tunnel",
 	RetailTunnelClusterId:                  "Retail Tunnel Cluster",
 	PriceId:                                "Price",
-	DemandResponseandLoadControlId:         "Demand Response and Load Control",
+	DemandResponseAndLoadControlId:         "Demand Response and Load Control",
 	MeteringId:                             "Metering",
 	MessagingId:                            "Messaging",
 	TunnelingId:                            "Tunneling",
@@ -184,7 +184,7 @@ var ClusterList = map[zigbee.ClusterID]string{
 	ChattingId:                             "Chatting",
 	EN50523ApplianceIdentificationId:       "EN50523 Appliance Identification",
 	MeterIdentificationId:                  "Meter Identification",
-	EN50523ApplianceEventsandAlertsId:      "EN50523 Appliance Events and Alerts",
+	EN50523ApplianceEventsAndAlertsId:      "EN50523 Appliance Events and Alerts",
 	EN50523ApplianceStatisticsId:           "EN50523 Appliance Statistics",
 	ElectricalMeasurementId:                "Electrical Measurement",
 	DiagnosticsId:                          "Diagnostics",
