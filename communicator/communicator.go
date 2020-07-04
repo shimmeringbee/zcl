@@ -94,14 +94,14 @@ func (c *Communicator) RemoveCallback(match Match) {
 	delete(c.matches, match.Id)
 }
 
-func (c *Communicator) Request(ctx context.Context, address zigbee.IEEEAddress, message zcl.Message) error {
+func (c *Communicator) Request(ctx context.Context, address zigbee.IEEEAddress, requireAck bool, message zcl.Message) error {
 	appMessage, err := c.CommandRegistry.Marshal(message)
 
 	if err != nil {
 		return fmt.Errorf("ZCL communicator failed to send message during marshalling: %w", err)
 	}
 
-	err = c.Provider.SendApplicationMessageToNode(ctx, address, appMessage, false)
+	err = c.Provider.SendApplicationMessageToNode(ctx, address, appMessage, requireAck)
 
 	if err != nil {
 		return fmt.Errorf("ZCL communicator failed to send via provider: %w", err)
@@ -110,7 +110,7 @@ func (c *Communicator) Request(ctx context.Context, address zigbee.IEEEAddress, 
 	return nil
 }
 
-func (c *Communicator) RequestResponse(ctx context.Context, address zigbee.IEEEAddress, message zcl.Message) (zcl.Message, error) {
+func (c *Communicator) RequestResponse(ctx context.Context, address zigbee.IEEEAddress, requireAck bool, message zcl.Message) (zcl.Message, error) {
 	ch := make(chan zcl.Message, 1)
 
 	match := c.NewMatch(AddressAndSequenceMatch(address, message.TransactionSequence),
@@ -121,7 +121,7 @@ func (c *Communicator) RequestResponse(ctx context.Context, address zigbee.IEEEA
 	c.AddCallback(match)
 	defer c.RemoveCallback(match)
 
-	if err := c.Request(ctx, address, message); err != nil {
+	if err := c.Request(ctx, address, requireAck, message); err != nil {
 		return zcl.Message{}, err
 	}
 
@@ -141,7 +141,7 @@ type GlobalCommunicator struct {
 	communicator *Communicator
 }
 
-func (g *GlobalCommunicator) ReadAttributes(ctx context.Context, ieeeAddress zigbee.IEEEAddress, cluster zigbee.ClusterID, code zigbee.ManufacturerCode, sourceEndpoint zigbee.Endpoint, destEndpoint zigbee.Endpoint, transactionSequence uint8, attributes []zcl.AttributeID) ([]global.ReadAttributeResponseRecord, error) {
+func (g *GlobalCommunicator) ReadAttributes(ctx context.Context, ieeeAddress zigbee.IEEEAddress, requireAck bool, cluster zigbee.ClusterID, code zigbee.ManufacturerCode, sourceEndpoint zigbee.Endpoint, destEndpoint zigbee.Endpoint, transactionSequence uint8, attributes []zcl.AttributeID) ([]global.ReadAttributeResponseRecord, error) {
 	request := zcl.Message{
 		FrameType:           zcl.FrameGlobal,
 		Direction:           zcl.ClientToServer,
@@ -155,7 +155,7 @@ func (g *GlobalCommunicator) ReadAttributes(ctx context.Context, ieeeAddress zig
 		},
 	}
 
-	response, err := g.communicator.RequestResponse(ctx, ieeeAddress, request)
+	response, err := g.communicator.RequestResponse(ctx, ieeeAddress, requireAck, request)
 
 	if err != nil {
 		return nil, err

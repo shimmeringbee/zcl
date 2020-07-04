@@ -76,9 +76,9 @@ func TestCommunicator_Request(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(message)
 
-		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil)
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage, false).Return(nil)
 
-		err := c.Request(context.Background(), expectedIEEE, message)
+		err := c.Request(context.Background(), expectedIEEE, false, message)
 		assert.NoError(t, err)
 
 		provider.AssertExpectations(t)
@@ -109,7 +109,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(requestMessage)
 
-		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage, false).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
@@ -157,7 +157,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 			})
 		})
 
-		responseMessage, err := c.RequestResponse(context.Background(), expectedIEEE, requestMessage)
+		responseMessage, err := c.RequestResponse(context.Background(), expectedIEEE, false, requestMessage)
 		assert.NoError(t, err)
 
 		assert.Equal(t, requestMessage.TransactionSequence, responseMessage.TransactionSequence)
@@ -189,7 +189,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(requestMessage)
 
-		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage, false).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
@@ -240,7 +240,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
 		defer cancel()
 
-		_, err := c.RequestResponse(ctx, expectedIEEE, requestMessage)
+		_, err := c.RequestResponse(ctx, expectedIEEE, false, requestMessage)
 		assert.Error(t, err)
 
 		provider.AssertExpectations(t)
@@ -269,7 +269,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 
 		expectedAppMessage, _ := cr.Marshal(requestMessage)
 
-		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage).Return(nil).Run(func(args mock.Arguments) {
+		provider.On("SendApplicationMessageToNode", mock.Anything, expectedIEEE, expectedAppMessage, false).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
@@ -320,7 +320,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
 		defer cancel()
 
-		_, err := c.RequestResponse(ctx, expectedIEEE, requestMessage)
+		_, err := c.RequestResponse(ctx, expectedIEEE, false, requestMessage)
 		assert.Error(t, err)
 
 		provider.AssertExpectations(t)
@@ -378,7 +378,7 @@ func TestCommunicator_GlobalReadAttributes(t *testing.T) {
 
 		appRequestOne, _ := cr.Marshal(expectedRequestOne)
 
-		mockProvider.On("SendApplicationMessageToNode", mock.Anything, ieee, appRequestOne).Return(nil).Run(func(args mock.Arguments) {
+		mockProvider.On("SendApplicationMessageToNode", mock.Anything, ieee, appRequestOne, true).Return(nil).Run(func(args mock.Arguments) {
 			message := zcl.Message{
 				FrameType:           zcl.FrameGlobal,
 				Direction:           zcl.ServerToClient,
@@ -415,7 +415,7 @@ func TestCommunicator_GlobalReadAttributes(t *testing.T) {
 			})
 		})
 
-		resp, err := g.ReadAttributes(context.Background(), ieee, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, []zcl.AttributeID{0x0004, 0x0005})
+		resp, err := g.ReadAttributes(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, []zcl.AttributeID{0x0004, 0x0005})
 		assert.NoError(t, err)
 		assert.Equal(t, expectedResponse.Records, resp)
 	})
