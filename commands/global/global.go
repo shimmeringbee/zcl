@@ -1,41 +1,41 @@
 package global
 
-import . "github.com/shimmeringbee/zcl"
+import "github.com/shimmeringbee/zcl"
 
 const (
-	ReadAttributesID                     CommandIdentifier = 0x00
-	ReadAttributesResponseID             CommandIdentifier = 0x01
-	WriteAttributesID                    CommandIdentifier = 0x02
-	WriteAttributesUndividedID           CommandIdentifier = 0x03
-	WriteAttributesResponseID            CommandIdentifier = 0x04
-	WriteAttributesNoResponseID          CommandIdentifier = 0x05
-	ConfigureReportingID                 CommandIdentifier = 0x06
-	ConfigureReportingResponseID         CommandIdentifier = 0x07
-	ReadReportingConfigurationID         CommandIdentifier = 0x08
-	ReadReportingConfigurationResponseID CommandIdentifier = 0x09
-	ReportAttributesID                   CommandIdentifier = 0x0a
-	DefaultResponseID                    CommandIdentifier = 0x0b
-	DiscoverAttributesID                 CommandIdentifier = 0x0c
-	DiscoverAttributesResponseID         CommandIdentifier = 0x0d
-	ReadAttributesStructuredID           CommandIdentifier = 0x0e
-	WriteAttributesStructuredID          CommandIdentifier = 0x0f
-	WriteAttributesStructuredResponseID  CommandIdentifier = 0x10
-	DiscoverCommandsReceivedID           CommandIdentifier = 0x11
-	DiscoverCommandsReceivedResponseID   CommandIdentifier = 0x12
-	DiscoverCommandsGeneratedID          CommandIdentifier = 0x13
-	DiscoverCommandsGeneratedResponseID  CommandIdentifier = 0x14
-	DiscoverAttributesExtendedID         CommandIdentifier = 0x15
-	DiscoverAttributesExtendedResponseID CommandIdentifier = 0x16
+	ReadAttributesID                     zcl.CommandIdentifier = 0x00
+	ReadAttributesResponseID             zcl.CommandIdentifier = 0x01
+	WriteAttributesID                    zcl.CommandIdentifier = 0x02
+	WriteAttributesUndividedID           zcl.CommandIdentifier = 0x03
+	WriteAttributesResponseID            zcl.CommandIdentifier = 0x04
+	WriteAttributesNoResponseID          zcl.CommandIdentifier = 0x05
+	ConfigureReportingID                 zcl.CommandIdentifier = 0x06
+	ConfigureReportingResponseID         zcl.CommandIdentifier = 0x07
+	ReadReportingConfigurationID         zcl.CommandIdentifier = 0x08
+	ReadReportingConfigurationResponseID zcl.CommandIdentifier = 0x09
+	ReportAttributesID                   zcl.CommandIdentifier = 0x0a
+	DefaultResponseID                    zcl.CommandIdentifier = 0x0b
+	DiscoverAttributesID                 zcl.CommandIdentifier = 0x0c
+	DiscoverAttributesResponseID         zcl.CommandIdentifier = 0x0d
+	ReadAttributesStructuredID           zcl.CommandIdentifier = 0x0e
+	WriteAttributesStructuredID          zcl.CommandIdentifier = 0x0f
+	WriteAttributesStructuredResponseID  zcl.CommandIdentifier = 0x10
+	DiscoverCommandsReceivedID           zcl.CommandIdentifier = 0x11
+	DiscoverCommandsReceivedResponseID   zcl.CommandIdentifier = 0x12
+	DiscoverCommandsGeneratedID          zcl.CommandIdentifier = 0x13
+	DiscoverCommandsGeneratedResponseID  zcl.CommandIdentifier = 0x14
+	DiscoverAttributesExtendedID         zcl.CommandIdentifier = 0x15
+	DiscoverAttributesExtendedResponseID zcl.CommandIdentifier = 0x16
 )
 
 type ReadAttributes struct {
-	Identifier []AttributeID
+	Identifier []zcl.AttributeID
 }
 
 type ReadAttributeResponseRecord struct {
-	Identifier    AttributeID
+	Identifier    zcl.AttributeID
 	Status        uint8
-	DataTypeValue *AttributeDataTypeValue `bcincludeif:"Status==0"`
+	DataTypeValue *zcl.AttributeDataTypeValue `bcincludeif:"Status==0"`
 }
 
 type ReadAttributesResponse struct {
@@ -47,13 +47,13 @@ type WriteAttributes struct {
 }
 
 type WriteAttributesRecord struct {
-	Identifier    AttributeID
-	DataTypeValue *AttributeDataTypeValue
+	Identifier    zcl.AttributeID
+	DataTypeValue *zcl.AttributeDataTypeValue
 }
 
 type WriteAttributesResponseRecord struct {
 	Status     uint8
-	Identifier AttributeID
+	Identifier zcl.AttributeID
 }
 
 type WriteAttributesResponse struct {
@@ -66,12 +66,12 @@ type WriteAttributesNoResponse WriteAttributes
 
 type ConfigureReportingRecord struct {
 	Direction        uint8
-	Identifier       AttributeID
-	DataType         AttributeDataType `bcincludeif:"Direction==0"`
-	MinimumInterval  uint16            `bcincludeif:"Direction==0"`
-	MaximumInterval  uint16            `bcincludeif:"Direction==0"`
-	ReportableChange interface{}       `bcincludeif:"Direction==0"`
-	Timeout          uint16            `bcincludeif:"Direction==1"`
+	Identifier       zcl.AttributeID
+	DataType         zcl.AttributeDataType `bcincludeif:"Direction==0"`
+	MinimumInterval  uint16                `bcincludeif:"Direction==0"`
+	MaximumInterval  uint16                `bcincludeif:"Direction==0"`
+	ReportableChange interface{}           `bcincludeif:"Direction==0"`
+	Timeout          uint16                `bcincludeif:"Direction==1"`
 }
 
 type ConfigureReporting struct {
@@ -81,7 +81,7 @@ type ConfigureReporting struct {
 type ConfigureReportingResponseRecord struct {
 	Status     uint8
 	Direction  uint8
-	Identifier AttributeID
+	Identifier zcl.AttributeID
 }
 
 type ConfigureReportingResponse struct {
@@ -90,7 +90,7 @@ type ConfigureReportingResponse struct {
 
 type ReadReportingConfigurationRecord struct {
 	Direction  uint8
-	Identifier AttributeID
+	Identifier zcl.AttributeID
 }
 
 type ReadReportingConfiguration struct {
@@ -100,12 +100,12 @@ type ReadReportingConfiguration struct {
 type ReadReportingConfigurationResponseRecord struct {
 	Status           uint8
 	Direction        uint8
-	Identifier       AttributeID
-	DataType         AttributeDataType `bcincludeif:"Direction==0"`
-	MinimumInterval  uint16            `bcincludeif:"Direction==0"`
-	MaximumInterval  uint16            `bcincludeif:"Direction==0"`
-	ReportableChange interface{}       `bcincludeif:"Direction==0"`
-	Timeout          uint16            `bcincludeif:"Direction==1"`
+	Identifier       zcl.AttributeID
+	DataType         zcl.AttributeDataType `bcincludeif:"Direction==0"`
+	MinimumInterval  uint16                `bcincludeif:"Direction==0"`
+	MaximumInterval  uint16                `bcincludeif:"Direction==0"`
+	ReportableChange interface{}           `bcincludeif:"Direction==0"`
+	Timeout          uint16                `bcincludeif:"Direction==1"`
 }
 
 type ReadReportingConfigurationResponse struct {
@@ -113,8 +113,8 @@ type ReadReportingConfigurationResponse struct {
 }
 
 type ReportAttributesRecord struct {
-	Identifier    AttributeID
-	DataTypeValue *AttributeDataTypeValue
+	Identifier    zcl.AttributeID
+	DataTypeValue *zcl.AttributeDataTypeValue
 }
 
 type ReportAttributes struct {
@@ -132,8 +132,8 @@ type DiscoverAttributes struct {
 }
 
 type DiscoverAttributesResponseRecord struct {
-	Identifier AttributeID
-	DataType   AttributeDataType
+	Identifier zcl.AttributeID
+	DataType   zcl.AttributeDataType
 }
 
 type DiscoverAttributesResponse struct {
@@ -142,7 +142,7 @@ type DiscoverAttributesResponse struct {
 }
 
 type ReadAttributesStructuredRecord struct {
-	Identifier AttributeID
+	Identifier zcl.AttributeID
 	Selector   Selector
 }
 
@@ -156,9 +156,9 @@ type Selector struct {
 }
 
 type WriteAttributesStructuredRecord struct {
-	Identifier    AttributeID
+	Identifier    zcl.AttributeID
 	Selector      Selector
-	DataTypeValue *AttributeDataTypeValue
+	DataTypeValue *zcl.AttributeDataTypeValue
 }
 
 type WriteAttributesStructured struct {
@@ -167,7 +167,7 @@ type WriteAttributesStructured struct {
 
 type WriteAttributesStructuredResponseRecord struct {
 	Status     uint8
-	Identifier AttributeID
+	Identifier zcl.AttributeID
 	Selector   Selector
 }
 
@@ -201,8 +201,8 @@ type DiscoverAttributesExtended struct {
 }
 
 type DiscoverAttributesExtendedResponseRecord struct {
-	Identifier    AttributeID
-	DataType      AttributeDataType
+	Identifier    zcl.AttributeID
+	DataType      zcl.AttributeDataType
 	AccessControl uint8
 }
 

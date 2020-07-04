@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/shimmeringbee/zcl"
+	"github.com/shimmeringbee/zcl/commands/global"
 	"github.com/shimmeringbee/zigbee"
 	"sync"
 	"sync/atomic"
@@ -129,5 +130,40 @@ func (c *Communicator) RequestResponse(ctx context.Context, address zigbee.IEEEA
 		return resp, nil
 	case <-ctx.Done():
 		return zcl.Message{}, errors.New("ZCL communicator waiting for reply, context expired")
+	}
+}
+
+func (c *Communicator) Global() *GlobalCommunicator {
+	return &GlobalCommunicator{communicator: c}
+}
+
+type GlobalCommunicator struct {
+	communicator *Communicator
+}
+
+func (g *GlobalCommunicator) ReadAttributes(ctx context.Context, ieeeAddress zigbee.IEEEAddress, cluster zigbee.ClusterID, code zigbee.ManufacturerCode, sourceEndpoint zigbee.Endpoint, destEndpoint zigbee.Endpoint, transactionSequence uint8, attributes []zcl.AttributeID) ([]global.ReadAttributeResponseRecord, error) {
+	request := zcl.Message{
+		FrameType:           zcl.FrameGlobal,
+		Direction:           zcl.ClientToServer,
+		TransactionSequence: transactionSequence,
+		Manufacturer:        code,
+		ClusterID:           cluster,
+		SourceEndpoint:      sourceEndpoint,
+		DestinationEndpoint: destEndpoint,
+		Command: &global.ReadAttributes{
+			Identifier: attributes,
+		},
+	}
+
+	response, err := g.communicator.RequestResponse(ctx, ieeeAddress, request)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if readResponse, is := response.Command.(*global.ReadAttributesResponse); is {
+		return readResponse.Records, nil
+	} else {
+		return []global.ReadAttributeResponseRecord{}, errors.New("read attributes received command back which was not ReadAttributesResponse")
 	}
 }
