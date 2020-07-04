@@ -139,9 +139,11 @@ func Test_OnWithRecallGlobalScene(t *testing.T) {
 func Test_OnWithTimedOff(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
 		expectedCommand := OnWithTimedOff{
-			OnOffControl: 0x01,
-			OnTime:       0x1122,
-			OffWaitTime:  0x3344,
+			OnOffControl: OnOffControl{
+				AcceptOnlyWhenOn: true,
+			},
+			OnTime:      0x1122,
+			OffWaitTime: 0x3344,
 		}
 		actualCommand := OnWithTimedOff{}
 		expectedBytes := []byte{0x01, 0x22, 0x11, 0x44, 0x33}

@@ -31,8 +31,13 @@ type OffWithEffect struct {
 
 type OnWithRecallGlobalScene struct{}
 
+type OnOffControl struct {
+	Reserved         uint8 `bcfieldwidth:"7"`
+	AcceptOnlyWhenOn bool  `bcfieldwidth:"1"`
+}
+
 type OnWithTimedOff struct {
-	OnOffControl uint8
+	OnOffControl OnOffControl
 	OnTime       uint16
 	OffWaitTime  uint16
 }
