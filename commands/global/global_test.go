@@ -215,8 +215,6 @@ func Test_WriteAttributesUndivided(t *testing.T) {
 }
 
 func Test_ConfigureReporting(t *testing.T) {
-	t.Skip("skipping ConfigureReporting due to marshaler/unmarshaler being unable to handle order of attributes")
-
 	t.Run("direction 0x00, with discrete type, marshals and unmarshals correctly", func(t *testing.T) {
 		expectedCommand := ConfigureReporting{
 			Records: []ConfigureReportingRecord{
@@ -226,13 +224,13 @@ func Test_ConfigureReporting(t *testing.T) {
 					DataType:         zcl.TypeData8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
-					ReportableChange: nil,
-					Timeout:          0x7080,
+					ReportableChange: &zcl.AttributeDataValue{},
+					Timeout:          0,
 				},
 			},
 		}
 		actualCommand := ConfigureReporting{}
-		expectedBytes := []byte{0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50, 0x80, 0x70}
+		expectedBytes := []byte{0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
@@ -252,13 +250,13 @@ func Test_ConfigureReporting(t *testing.T) {
 					DataType:         zcl.TypeUnsignedInt8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
-					ReportableChange: 0xaa,
-					Timeout:          0x7080,
+					ReportableChange: &zcl.AttributeDataValue{Value: uint64(0xaa)},
+					Timeout:          0,
 				},
 			},
 		}
 		actualCommand := ConfigureReporting{}
-		expectedBytes := []byte{0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50, 0xaa, 0x80, 0x70}
+		expectedBytes := []byte{0x00, 0x20, 0x10, 0x20, 0x40, 0x30, 0x60, 0x50, 0xaa}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
@@ -371,8 +369,6 @@ func Test_ReadReportingConfiguration(t *testing.T) {
 }
 
 func Test_ReadReportingConfigurationResponse(t *testing.T) {
-	t.Skip("skipping ReadReportingConfigurationResponse due to marshaler/unmarshaler being unable to handle order of attributes")
-
 	t.Run("direction 0x00, with discrete type, marshals and unmarshals correctly", func(t *testing.T) {
 		expectedCommand := ReadReportingConfigurationResponse{
 			Records: []ReadReportingConfigurationResponseRecord{
@@ -383,13 +379,13 @@ func Test_ReadReportingConfigurationResponse(t *testing.T) {
 					DataType:         zcl.TypeData8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
-					ReportableChange: nil,
-					Timeout:          0x7080,
+					ReportableChange: &zcl.AttributeDataValue{},
+					Timeout:          0,
 				},
 			},
 		}
 		actualCommand := ReadReportingConfigurationResponse{}
-		expectedBytes := []byte{0x99, 0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50, 0x80, 0x70}
+		expectedBytes := []byte{0x99, 0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
@@ -410,13 +406,13 @@ func Test_ReadReportingConfigurationResponse(t *testing.T) {
 					DataType:         zcl.TypeUnsignedInt8,
 					MinimumInterval:  0x3040,
 					MaximumInterval:  0x5060,
-					ReportableChange: 0xaa,
-					Timeout:          0x7080,
+					ReportableChange: &zcl.AttributeDataValue{Value: uint64(0xaa)},
+					Timeout:          0,
 				},
 			},
 		}
 		actualCommand := ReadReportingConfigurationResponse{}
-		expectedBytes := []byte{0x99, 0x00, 0x20, 0x10, 0x08, 0x40, 0x30, 0x60, 0x50, 0xaa, 0x80, 0x70}
+		expectedBytes := []byte{0x99, 0x00, 0x20, 0x10, 0x20, 0x40, 0x30, 0x60, 0x50, 0xaa}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)

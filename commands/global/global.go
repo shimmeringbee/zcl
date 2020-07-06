@@ -67,11 +67,11 @@ type WriteAttributesNoResponse WriteAttributes
 type ConfigureReportingRecord struct {
 	Direction        uint8
 	Identifier       zcl.AttributeID
-	DataType         zcl.AttributeDataType `bcincludeif:"Direction==0"`
-	MinimumInterval  uint16                `bcincludeif:"Direction==0"`
-	MaximumInterval  uint16                `bcincludeif:"Direction==0"`
-	ReportableChange interface{}           `bcincludeif:"Direction==0"`
-	Timeout          uint16                `bcincludeif:"Direction==1"`
+	DataType         zcl.AttributeDataType   `bcincludeif:"Direction==0"`
+	MinimumInterval  uint16                  `bcincludeif:"Direction==0"`
+	MaximumInterval  uint16                  `bcincludeif:"Direction==0"`
+	ReportableChange *zcl.AttributeDataValue `bcincludeif:"Direction==0"`
+	Timeout          uint16                  `bcincludeif:"Direction==1"`
 }
 
 type ConfigureReporting struct {
@@ -101,11 +101,11 @@ type ReadReportingConfigurationResponseRecord struct {
 	Status           uint8
 	Direction        uint8
 	Identifier       zcl.AttributeID
-	DataType         zcl.AttributeDataType `bcincludeif:"Direction==0"`
-	MinimumInterval  uint16                `bcincludeif:"Direction==0"`
-	MaximumInterval  uint16                `bcincludeif:"Direction==0"`
-	ReportableChange interface{}           `bcincludeif:"Direction==0"`
-	Timeout          uint16                `bcincludeif:"Direction==1"`
+	DataType         zcl.AttributeDataType   `bcincludeif:"Direction==0"`
+	MinimumInterval  uint16                  `bcincludeif:"Direction==0"`
+	MaximumInterval  uint16                  `bcincludeif:"Direction==0"`
+	ReportableChange *zcl.AttributeDataValue `bcincludeif:"Direction==0"`
+	Timeout          uint16                  `bcincludeif:"Direction==1"`
 }
 
 type ReadReportingConfigurationResponse struct {

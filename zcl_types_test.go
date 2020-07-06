@@ -969,3 +969,47 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.Equal(t, expectedValue, actualValue)
 	})
 }
+
+func Test_AttributeDataValue(t *testing.T) {
+	t.Run("marshaling and unmarshaling of attribute data value with prior type", func(t *testing.T) {
+		type SUT struct {
+			DataType AttributeDataType
+			One      *AttributeDataValue
+			Two      *AttributeDataValue
+		}
+
+		expectedValue := SUT{
+			DataType: TypeStringCharacter8,
+			One:      &AttributeDataValue{Value: "One"},
+			Two:      &AttributeDataValue{Value: "Two"},
+		}
+
+		actualValue := SUT{}
+		expectedBytes := []byte{0x42, 0x03, 'O', 'n', 'e', 0x03, 'T', 'w', 'o'}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of attribute data value without prior type errors", func(t *testing.T) {
+		type SUT struct {
+			One      *AttributeDataValue
+			Two      *AttributeDataValue
+			DataType AttributeDataType
+		}
+
+		expectedValue := SUT{
+			One:      &AttributeDataValue{Value: "One"},
+			Two:      &AttributeDataValue{Value: "Two"},
+			DataType: TypeStringCharacter8,
+		}
+
+		_, err := bytecodec.Marshal(&expectedValue)
+		assert.Error(t, err)
+	})
+}
