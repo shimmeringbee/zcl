@@ -167,3 +167,52 @@ func (g *GlobalCommunicator) ReadAttributes(ctx context.Context, ieeeAddress zig
 		return []global.ReadAttributeResponseRecord{}, errors.New("read attributes received command back which was not ReadAttributesResponse")
 	}
 }
+
+func (g *GlobalCommunicator) ConfigureReporting(ctx context.Context, ieeeAddress zigbee.IEEEAddress, requireAck bool, cluster zigbee.ClusterID, code zigbee.ManufacturerCode, sourceEndpoint zigbee.Endpoint, destEndpoint zigbee.Endpoint, transactionSequence uint8, attributeId zcl.AttributeID, dataType zcl.AttributeDataType, minimumReportingInterval uint16, maximumReportingInterval uint16, reportableChange interface{}) error {
+	request := zcl.Message{
+		FrameType:           zcl.FrameGlobal,
+		Direction:           zcl.ClientToServer,
+		TransactionSequence: transactionSequence,
+		Manufacturer:        code,
+		ClusterID:           cluster,
+		SourceEndpoint:      sourceEndpoint,
+		DestinationEndpoint: destEndpoint,
+		Command: &global.ConfigureReporting{
+			Records: []global.ConfigureReportingRecord{
+				{
+					Direction:        0x00,
+					Identifier:       attributeId,
+					DataType:         dataType,
+					MinimumInterval:  minimumReportingInterval,
+					MaximumInterval:  maximumReportingInterval,
+					ReportableChange: &zcl.AttributeDataValue{Value: reportableChange},
+					Timeout:          0,
+				},
+			},
+		},
+	}
+
+	response, err := g.communicator.RequestResponse(ctx, ieeeAddress, requireAck, request)
+
+	if err != nil {
+		return err
+	}
+
+	if readResponse, is := response.Command.(*global.ConfigureReportingResponse); is {
+		if len(readResponse.Records) != 1 {
+			return errors.New("incorrect number of responses sent to configure reporting")
+		}
+
+		if readResponse.Records[0].Identifier != attributeId {
+			return errors.New("incorrect attribute id response sent to configure reporting")
+		}
+
+		if readResponse.Records[0].Status != 0 {
+			return errors.New("non success response sent to configure reporting")
+		}
+
+		return nil
+	} else {
+		return errors.New("configure reporting received command back which was not ConfigureReportingResponse")
+	}
+}
