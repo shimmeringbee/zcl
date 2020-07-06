@@ -979,13 +979,13 @@ func Test_AttributeDataValue(t *testing.T) {
 		}
 
 		expectedValue := SUT{
-			DataType: TypeStringCharacter8,
-			One:      &AttributeDataValue{Value: "One"},
-			Two:      &AttributeDataValue{Value: "Two"},
+			DataType: TypeUnsignedInt8,
+			One:      &AttributeDataValue{Value: uint64(1)},
+			Two:      &AttributeDataValue{Value: uint64(2)},
 		}
 
 		actualValue := SUT{}
-		expectedBytes := []byte{0x42, 0x03, 'O', 'n', 'e', 0x03, 'T', 'w', 'o'}
+		expectedBytes := []byte{0x20, 0x01, 0x02}
 
 		actualBytes, err := bytecodec.Marshal(&expectedValue)
 		assert.NoError(t, err)
@@ -1004,9 +1004,9 @@ func Test_AttributeDataValue(t *testing.T) {
 		}
 
 		expectedValue := SUT{
-			One:      &AttributeDataValue{Value: "One"},
-			Two:      &AttributeDataValue{Value: "Two"},
-			DataType: TypeStringCharacter8,
+			One:      &AttributeDataValue{Value: uint64(1)},
+			Two:      &AttributeDataValue{Value: uint64(2)},
+			DataType: TypeUnsignedInt8,
 		}
 
 		_, err := bytecodec.Marshal(&expectedValue)
