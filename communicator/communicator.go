@@ -199,8 +199,8 @@ func (g *GlobalCommunicator) ConfigureReporting(ctx context.Context, ieeeAddress
 	}
 
 	if readResponse, is := response.Command.(*global.ConfigureReportingResponse); is {
-		if len(readResponse.Records) != 1 {
-			return errors.New("incorrect number of responses sent to configure reporting")
+		if len(readResponse.Records) == 0 {
+			return nil
 		}
 
 		if readResponse.Records[0].Identifier != attributeId {

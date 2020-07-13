@@ -86,7 +86,7 @@ func TestCommunicator_Request(t *testing.T) {
 }
 
 func TestCommunicator_RequestResponse(t *testing.T) {
-	t.Run("a message via the communicator goes to provider and the reply is returned to the caller", func(t *testing.T) {
+	t.Run("a message via the communicator goes to provider and the reply is returned to the caller, as success", func(t *testing.T) {
 		provider := &zigbee.MockProvider{}
 		cr := zcl.NewCommandRegistry()
 		global.Register(cr)
@@ -119,16 +119,7 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 				SourceEndpoint:      2,
 				DestinationEndpoint: 1,
 				Command: &global.ReadAttributesResponse{
-					Records: []global.ReadAttributeResponseRecord{
-						{
-							Identifier: 1,
-							Status:     0,
-							DataTypeValue: &zcl.AttributeDataTypeValue{
-								DataType: zcl.TypeSignedInt8,
-								Value:    int64(64),
-							},
-						},
-					},
+					Records: []global.ReadAttributeResponseRecord{},
 				},
 			}
 
