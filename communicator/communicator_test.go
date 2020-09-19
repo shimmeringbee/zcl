@@ -23,8 +23,10 @@ func TestCommunicator_ProcessIncomingMessage(t *testing.T) {
 			Node: zigbee.Node{},
 			IncomingMessage: zigbee.IncomingMessage{
 				GroupID:              0,
-				SourceIEEEAddress:    0,
-				SourceNetworkAddress: 0,
+				SourceAddress: zigbee.SourceAddress{
+					IEEEAddress:    0,
+					NetworkAddress: 0,
+				},
 				Broadcast:            false,
 				Secure:               false,
 				LinkQuality:          0,
@@ -137,8 +139,10 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 				},
 				IncomingMessage: zigbee.IncomingMessage{
 					GroupID:              0,
-					SourceIEEEAddress:    expectedIEEE,
-					SourceNetworkAddress: 0,
+					SourceAddress: zigbee.SourceAddress{
+						IEEEAddress:    expectedIEEE,
+						NetworkAddress: 0,
+					},
 					Broadcast:            false,
 					Secure:               false,
 					LinkQuality:          0,
@@ -217,8 +221,10 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 				},
 				IncomingMessage: zigbee.IncomingMessage{
 					GroupID:              0,
-					SourceIEEEAddress:    expectedIEEE,
-					SourceNetworkAddress: 0,
+					SourceAddress: zigbee.SourceAddress{
+						IEEEAddress:    expectedIEEE,
+						NetworkAddress: 0,
+					},
 					Broadcast:            false,
 					Secure:               false,
 					LinkQuality:          0,
@@ -297,8 +303,10 @@ func TestCommunicator_RequestResponse(t *testing.T) {
 				},
 				IncomingMessage: zigbee.IncomingMessage{
 					GroupID:              0,
-					SourceIEEEAddress:    expectedIEEE,
-					SourceNetworkAddress: 0,
+					SourceAddress: zigbee.SourceAddress{
+						IEEEAddress:    expectedIEEE,
+						NetworkAddress: 0,
+					},
 					Broadcast:            false,
 					Secure:               false,
 					LinkQuality:          0,
@@ -395,8 +403,10 @@ func TestCommunicator_GlobalReadAttributes(t *testing.T) {
 				},
 				IncomingMessage: zigbee.IncomingMessage{
 					GroupID:              0,
-					SourceIEEEAddress:    ieee,
-					SourceNetworkAddress: 0,
+					SourceAddress: zigbee.SourceAddress{
+						IEEEAddress:    ieee,
+						NetworkAddress: 0,
+					},
 					Broadcast:            false,
 					Secure:               false,
 					LinkQuality:          0,
@@ -497,8 +507,10 @@ func TestCommunicator_GlobalConfigureReporting(t *testing.T) {
 				},
 				IncomingMessage: zigbee.IncomingMessage{
 					GroupID:              0,
-					SourceIEEEAddress:    ieee,
-					SourceNetworkAddress: 0,
+					SourceAddress: zigbee.SourceAddress{
+						IEEEAddress:    ieee,
+						NetworkAddress: 0,
+					},
 					Broadcast:            false,
 					Secure:               false,
 					LinkQuality:          0,
