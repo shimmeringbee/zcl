@@ -168,6 +168,41 @@ func (g *GlobalCommunicator) ReadAttributes(ctx context.Context, ieeeAddress zig
 	}
 }
 
+func (g *GlobalCommunicator) WriteAttributes(ctx context.Context, ieeeAddress zigbee.IEEEAddress, requireAck bool, cluster zigbee.ClusterID, code zigbee.ManufacturerCode, sourceEndpoint zigbee.Endpoint, destEndpoint zigbee.Endpoint, transactionSequence uint8, attributes map[zcl.AttributeID]zcl.AttributeDataTypeValue) ([]global.WriteAttributesResponseRecord, error) {
+	var records []global.WriteAttributesRecord
+
+	for k, v := range attributes {
+		records = append(records, global.WriteAttributesRecord{
+			Identifier:    k,
+			DataTypeValue: &v,
+		})
+	}
+
+	request := zcl.Message{
+		FrameType:           zcl.FrameGlobal,
+		Direction:           zcl.ClientToServer,
+		TransactionSequence: transactionSequence,
+		Manufacturer:        code,
+		ClusterID:           cluster,
+		SourceEndpoint:      sourceEndpoint,
+		DestinationEndpoint: destEndpoint,
+		Command: &global.WriteAttributes{
+			Records: records,
+		},
+	}
+
+	response, err := g.communicator.RequestResponse(ctx, ieeeAddress, requireAck, request)
+
+	if err != nil {
+		return nil, err
+	}
+	if resp, is := response.Command.(*global.WriteAttributesResponse); is {
+		return resp.Records, nil
+	} else {
+		return nil, errors.New("read attributes received command back which was not WriteAttributesResponse")
+	}
+}
+
 func (g *GlobalCommunicator) ConfigureReporting(ctx context.Context, ieeeAddress zigbee.IEEEAddress, requireAck bool, cluster zigbee.ClusterID, code zigbee.ManufacturerCode, sourceEndpoint zigbee.Endpoint, destEndpoint zigbee.Endpoint, transactionSequence uint8, attributeId zcl.AttributeID, dataType zcl.AttributeDataType, minimumReportingInterval uint16, maximumReportingInterval uint16, reportableChange interface{}) error {
 	request := zcl.Message{
 		FrameType:           zcl.FrameGlobal,
