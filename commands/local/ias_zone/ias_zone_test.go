@@ -1,4 +1,4 @@
-package onoff
+package ias_zone
 
 import (
 	"github.com/shimmeringbee/bytecodec"
@@ -8,10 +8,35 @@ import (
 	"testing"
 )
 
-func Test_Off(t *testing.T) {
+func Test_ZoneEnrollResponse(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := Off{}
-		actualCommand := Off{}
+		expectedCommand := ZoneEnrollResponse{ResponseCode: 0x01, ZoneID: 0x02}
+		actualCommand := ZoneEnrollResponse{}
+		expectedBytes := []byte{0x01, 0x02}
+
+		actualBytes, err := bytecodec.Marshal(&expectedCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedCommand, actualCommand)
+	})
+
+	t.Run("the message is registered in the command registry", func(t *testing.T) {
+		cr := zcl.NewCommandRegistry()
+		Register(cr)
+
+		id, err := cr.GetLocalCommandIdentifier(zcl.IASZoneId, zigbee.NoManufacturer, zcl.ClientToServer, &ZoneEnrollResponse{})
+		assert.NoError(t, err)
+		assert.Equal(t, ZoneEnrollResponseId, id)
+	})
+}
+
+func Test_InitiateNormalOperationMode(t *testing.T) {
+	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
+		expectedCommand := InitiateNormalOperationMode{}
+		actualCommand := InitiateNormalOperationMode{}
 		var expectedBytes []byte
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
@@ -27,17 +52,17 @@ func Test_Off(t *testing.T) {
 		cr := zcl.NewCommandRegistry()
 		Register(cr)
 
-		id, err := cr.GetLocalCommandIdentifier(zcl.OnOffId, zigbee.NoManufacturer, zcl.ClientToServer, &Off{})
+		id, err := cr.GetLocalCommandIdentifier(zcl.IASZoneId, zigbee.NoManufacturer, zcl.ClientToServer, &InitiateNormalOperationMode{})
 		assert.NoError(t, err)
-		assert.Equal(t, OffId, id)
+		assert.Equal(t, InitiateNormalOperationModeId, id)
 	})
 }
 
-func Test_On(t *testing.T) {
+func Test_InitiateTestMode(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := On{}
-		actualCommand := On{}
-		var expectedBytes []byte
+		expectedCommand := InitiateTestMode{TestModeDuration: 0x01, CurrentZoneSensitivityLevel: 0x02}
+		actualCommand := InitiateTestMode{}
+		expectedBytes := []byte{0x01, 0x02}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
@@ -52,45 +77,31 @@ func Test_On(t *testing.T) {
 		cr := zcl.NewCommandRegistry()
 		Register(cr)
 
-		id, err := cr.GetLocalCommandIdentifier(zcl.OnOffId, zigbee.NoManufacturer, zcl.ClientToServer, &On{})
+		id, err := cr.GetLocalCommandIdentifier(zcl.IASZoneId, zigbee.NoManufacturer, zcl.ClientToServer, &InitiateTestMode{})
 		assert.NoError(t, err)
-		assert.Equal(t, OnId, id)
+		assert.Equal(t, InitiateTestModeId, id)
 	})
 }
 
-func Test_Toggle(t *testing.T) {
+func Test_ZoneStatusChangeNotification(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := Toggle{}
-		actualCommand := Toggle{}
-		var expectedBytes []byte
-
-		actualBytes, err := bytecodec.Marshal(&expectedCommand)
-		assert.NoError(t, err)
-		assert.Equal(t, expectedBytes, actualBytes)
-
-		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
-		assert.NoError(t, err)
-		assert.Equal(t, expectedCommand, actualCommand)
-	})
-
-	t.Run("the message is registered in the command registry", func(t *testing.T) {
-		cr := zcl.NewCommandRegistry()
-		Register(cr)
-
-		id, err := cr.GetLocalCommandIdentifier(zcl.OnOffId, zigbee.NoManufacturer, zcl.ClientToServer, &Toggle{})
-		assert.NoError(t, err)
-		assert.Equal(t, ToggleId, id)
-	})
-}
-
-func Test_OffWithEffect(t *testing.T) {
-	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := OffWithEffect{
-			EffectIdentifier: 0x55,
-			EffectVariant:    0xaa,
+		expectedCommand := ZoneStatusChangeNotification{
+			BatteryDefect:      true,
+			TestMode:           false,
+			ACMainsFault:       false,
+			Trouble:            true,
+			RestoreReports:     false,
+			SupervisionReports: true,
+			BatteryLow:         false,
+			Tamper:             true,
+			Alarm2:             false,
+			Alarm1:             true,
+			ExtendedStatus:     0xff,
+			ZoneID:             0x02,
+			Delay:              0x0304,
 		}
-		actualCommand := OffWithEffect{}
-		expectedBytes := []byte{0x55, 0xaa}
+		actualCommand := ZoneStatusChangeNotification{}
+		expectedBytes := []byte{0x02, 0x55, 0xff, 0x02, 0x04, 0x03}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
@@ -105,17 +116,17 @@ func Test_OffWithEffect(t *testing.T) {
 		cr := zcl.NewCommandRegistry()
 		Register(cr)
 
-		id, err := cr.GetLocalCommandIdentifier(zcl.OnOffId, zigbee.NoManufacturer, zcl.ClientToServer, &OffWithEffect{})
+		id, err := cr.GetLocalCommandIdentifier(zcl.IASZoneId, zigbee.NoManufacturer, zcl.ServerToClient, &ZoneStatusChangeNotification{})
 		assert.NoError(t, err)
-		assert.Equal(t, OffWithEffectId, id)
+		assert.Equal(t, ZoneStatusChangeNotificationId, id)
 	})
 }
 
-func Test_OnWithRecallGlobalScene(t *testing.T) {
+func Test_ZoneEnrollRequest(t *testing.T) {
 	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := OnWithRecallGlobalScene{}
-		actualCommand := OnWithRecallGlobalScene{}
-		var expectedBytes []byte
+		expectedCommand := ZoneEnrollRequest{ZoneType: 0x0102, ManufacturerCode: 0x0304}
+		actualCommand := ZoneEnrollRequest{}
+		expectedBytes := []byte{0x02, 0x01, 0x04, 0x03}
 
 		actualBytes, err := bytecodec.Marshal(&expectedCommand)
 		assert.NoError(t, err)
@@ -130,39 +141,8 @@ func Test_OnWithRecallGlobalScene(t *testing.T) {
 		cr := zcl.NewCommandRegistry()
 		Register(cr)
 
-		id, err := cr.GetLocalCommandIdentifier(zcl.OnOffId, zigbee.NoManufacturer, zcl.ClientToServer, &OnWithRecallGlobalScene{})
+		id, err := cr.GetLocalCommandIdentifier(zcl.IASZoneId, zigbee.NoManufacturer, zcl.ServerToClient, &ZoneEnrollRequest{})
 		assert.NoError(t, err)
-		assert.Equal(t, OnWithRecallGlobalSceneId, id)
-	})
-}
-
-func Test_OnWithTimedOff(t *testing.T) {
-	t.Run("marshals and unmarshals correctly", func(t *testing.T) {
-		expectedCommand := OnWithTimedOff{
-			OnOffControl: OnOffControl{
-				AcceptOnlyWhenOn: true,
-			},
-			OnTime:      0x1122,
-			OffWaitTime: 0x3344,
-		}
-		actualCommand := OnWithTimedOff{}
-		expectedBytes := []byte{0x01, 0x22, 0x11, 0x44, 0x33}
-
-		actualBytes, err := bytecodec.Marshal(&expectedCommand)
-		assert.NoError(t, err)
-		assert.Equal(t, expectedBytes, actualBytes)
-
-		err = bytecodec.Unmarshal(expectedBytes, &actualCommand)
-		assert.NoError(t, err)
-		assert.Equal(t, expectedCommand, actualCommand)
-	})
-
-	t.Run("the message is registered in the command registry", func(t *testing.T) {
-		cr := zcl.NewCommandRegistry()
-		Register(cr)
-
-		id, err := cr.GetLocalCommandIdentifier(zcl.OnOffId, zigbee.NoManufacturer, zcl.ClientToServer, &OnWithTimedOff{})
-		assert.NoError(t, err)
-		assert.Equal(t, OnWithTimedOffId, id)
+		assert.Equal(t, ZoneEnrollRequestId, id)
 	})
 }

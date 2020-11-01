@@ -10,16 +10,16 @@ type CommandRegistry struct {
 	globalIdentifierToInterface map[CommandIdentifier]interface{}
 	globalInterfaceToIdentifier map[reflect.Type]CommandIdentifier
 
-	localIdentifierToInterface map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[CommandIdentifier]interface{}
-	localInterfaceToIdentifier map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[reflect.Type]CommandIdentifier
+	localIdentifierToInterface map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[Direction]map[CommandIdentifier]interface{}
+	localInterfaceToIdentifier map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[Direction]map[reflect.Type]CommandIdentifier
 }
 
 func NewCommandRegistry() *CommandRegistry {
 	return &CommandRegistry{
 		globalIdentifierToInterface: make(map[CommandIdentifier]interface{}),
 		globalInterfaceToIdentifier: make(map[reflect.Type]CommandIdentifier),
-		localIdentifierToInterface:  make(map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[CommandIdentifier]interface{}),
-		localInterfaceToIdentifier:  make(map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[reflect.Type]CommandIdentifier),
+		localIdentifierToInterface:  make(map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[Direction]map[CommandIdentifier]interface{}),
+		localInterfaceToIdentifier:  make(map[zigbee.ClusterID]map[zigbee.ManufacturerCode]map[Direction]map[reflect.Type]CommandIdentifier),
 	}
 }
 
@@ -50,17 +50,17 @@ func (cr *CommandRegistry) GetGlobalCommandIdentifier(command interface{}) (Comm
 	}
 }
 
-func (cr *CommandRegistry) RegisterLocal(clusterID zigbee.ClusterID, manufacturer zigbee.ManufacturerCode, identifier CommandIdentifier, command interface{}) {
+func (cr *CommandRegistry) RegisterLocal(clusterID zigbee.ClusterID, manufacturer zigbee.ManufacturerCode, direction Direction, identifier CommandIdentifier, command interface{}) {
 	clusterId2IntResult, clusterId2IntFound := cr.localIdentifierToInterface[clusterID]
 	clusterInt2IdResult, clusterInt2IdFound := cr.localInterfaceToIdentifier[clusterID]
 
 	if !clusterId2IntFound {
-		clusterId2IntResult = make(map[zigbee.ManufacturerCode]map[CommandIdentifier]interface{})
+		clusterId2IntResult = make(map[zigbee.ManufacturerCode]map[Direction]map[CommandIdentifier]interface{})
 		cr.localIdentifierToInterface[clusterID] = clusterId2IntResult
 	}
 
 	if !clusterInt2IdFound {
-		clusterInt2IdResult = make(map[zigbee.ManufacturerCode]map[reflect.Type]CommandIdentifier)
+		clusterInt2IdResult = make(map[zigbee.ManufacturerCode]map[Direction]map[reflect.Type]CommandIdentifier)
 		cr.localInterfaceToIdentifier[clusterID] = clusterInt2IdResult
 	}
 
@@ -68,33 +68,52 @@ func (cr *CommandRegistry) RegisterLocal(clusterID zigbee.ClusterID, manufacture
 	manufacturerInt2IdResult, manufacturerInt2IdFound := clusterInt2IdResult[manufacturer]
 
 	if !manufacturerId2IntFound {
-		manufacturerId2IntResult = make(map[CommandIdentifier]interface{})
+		manufacturerId2IntResult = make(map[Direction]map[CommandIdentifier]interface{})
 		clusterId2IntResult[manufacturer] = manufacturerId2IntResult
 	}
 
 	if !manufacturerInt2IdFound {
-		manufacturerInt2IdResult = make(map[reflect.Type]CommandIdentifier)
+		manufacturerInt2IdResult = make(map[Direction]map[reflect.Type]CommandIdentifier)
 		clusterInt2IdResult[manufacturer] = manufacturerInt2IdResult
 	}
 
-	manufacturerId2IntResult[identifier] = command
-	manufacturerInt2IdResult[reflect.TypeOf(command)] = identifier
+	directionId2IntResult, directionId2IntFound := manufacturerId2IntResult[direction]
+	directionInt2IdResult, directionInt2IdFound := manufacturerInt2IdResult[direction]
+
+	if !directionId2IntFound {
+		directionId2IntResult = make(map[CommandIdentifier]interface{})
+		manufacturerId2IntResult[direction] = directionId2IntResult
+	}
+
+	if !directionInt2IdFound {
+		directionInt2IdResult = make(map[reflect.Type]CommandIdentifier)
+		manufacturerInt2IdResult[direction] = directionInt2IdResult
+	}
+
+	directionId2IntResult[identifier] = command
+	directionInt2IdResult[reflect.TypeOf(command)] = identifier
 }
 
-func (cr *CommandRegistry) GetLocalCommand(clusterID zigbee.ClusterID, manufacturer zigbee.ManufacturerCode, identifier CommandIdentifier) (interface{}, error) {
+func (cr *CommandRegistry) GetLocalCommand(clusterID zigbee.ClusterID, manufacturer zigbee.ManufacturerCode, direction Direction, identifier CommandIdentifier) (interface{}, error) {
 	clusterResult, clusterFound := cr.localIdentifierToInterface[clusterID]
 
 	if !clusterFound {
-		return nil, fmt.Errorf("could not find local command for: cluster %d manufacturer %d identifier %d", clusterID, manufacturer, identifier)
+		return nil, fmt.Errorf("could not find local command for: cluster %d manufacturer %d identifier %d direction %d", clusterID, manufacturer, identifier, direction)
 	}
 
 	manufacturerResult, manufacturerFound := clusterResult[manufacturer]
 
 	if !manufacturerFound {
-		return nil, fmt.Errorf("could not find local command for: cluster %d manufacturer %d identifier %d", clusterID, manufacturer, identifier)
+		return nil, fmt.Errorf("could not find local command for: cluster %d manufacturer %d identifier %d direction %d", clusterID, manufacturer, identifier, direction)
 	}
 
-	interfaceResult, interfaceFound := manufacturerResult[identifier]
+	directionResult, directionFound := manufacturerResult[direction]
+
+	if !directionFound {
+		return nil, fmt.Errorf("could not find local command for: cluster %d manufacturer %d identifier %d direction %d", clusterID, manufacturer, identifier, direction)
+	}
+
+	interfaceResult, interfaceFound := directionResult[identifier]
 
 	if !interfaceFound {
 		return nil, fmt.Errorf("could not find local command for: cluster %d manufacturer %d identifier %d", clusterID, manufacturer, identifier)
@@ -104,21 +123,27 @@ func (cr *CommandRegistry) GetLocalCommand(clusterID zigbee.ClusterID, manufactu
 	return reflect.New(reflectedType).Interface(), nil
 }
 
-func (cr *CommandRegistry) GetLocalCommandIdentifier(clusterID zigbee.ClusterID, manufacturer zigbee.ManufacturerCode, command interface{}) (CommandIdentifier, error) {
+func (cr *CommandRegistry) GetLocalCommandIdentifier(clusterID zigbee.ClusterID, manufacturer zigbee.ManufacturerCode, direction Direction, command interface{}) (CommandIdentifier, error) {
 	reflectedType := reflect.TypeOf(command)
 	clusterResult, clusterFound := cr.localInterfaceToIdentifier[clusterID]
 
 	if !clusterFound {
-		return 0, fmt.Errorf("could not find local command for: cluster %d manufacturer %d type %s", clusterID, manufacturer, reflectedType.Name())
+		return 0, fmt.Errorf("could not find local command for: cluster %d manufacturer %d direction %d type %s", clusterID, manufacturer, direction, reflectedType.Name())
 	}
 
 	manufacturerResult, manufacturerFound := clusterResult[manufacturer]
 
 	if !manufacturerFound {
-		return 0, fmt.Errorf("could not find local command for: cluster %d manufacturer %d type %s", clusterID, manufacturer, reflectedType.Name())
+		return 0, fmt.Errorf("could not find local command for: cluster %d manufacturer %d direction %d type %s", clusterID, manufacturer, direction, reflectedType.Name())
 	}
 
-	identifierResult, identifierFound := manufacturerResult[reflectedType]
+	directionResult, directionFound := manufacturerResult[direction]
+
+	if !directionFound {
+		return 0, fmt.Errorf("could not find local command for: cluster %d manufacturer %d direction %d type %s", clusterID, manufacturer, direction, reflectedType.Name())
+	}
+
+	identifierResult, identifierFound := directionResult[reflectedType]
 
 	if !identifierFound {
 		return 0, fmt.Errorf("could not find local command for: cluster %d manufacturer %d type %s", clusterID, manufacturer, reflectedType.Name())

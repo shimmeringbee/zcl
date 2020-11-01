@@ -49,7 +49,7 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 
 		cr := NewCommandRegistry()
 
-		_, err := cr.GetLocalCommandIdentifier(clusterId, manufacturer, &ThisCommand{})
+		_, err := cr.GetLocalCommandIdentifier(clusterId, manufacturer, ClientToServer, &ThisCommand{})
 		assert.Error(t, err)
 
 		_, err = cr.GetGlobalCommand(expectedIdentifier)
@@ -65,13 +65,13 @@ func Test_CommandRegistryGlobal(t *testing.T) {
 
 		cr := NewCommandRegistry()
 
-		cr.RegisterLocal(clusterId, manufacturer, expectedIdentifier, &ThisCommand{})
+		cr.RegisterLocal(clusterId, manufacturer, ClientToServer, expectedIdentifier, &ThisCommand{})
 
-		actualIdentifier, err := cr.GetLocalCommandIdentifier(clusterId, manufacturer, &ThisCommand{})
+		actualIdentifier, err := cr.GetLocalCommandIdentifier(clusterId, manufacturer, ClientToServer, &ThisCommand{})
 		assert.NoError(t, err)
 		assert.Equal(t, expectedIdentifier, actualIdentifier)
 
-		cmd, err := cr.GetLocalCommand(clusterId, manufacturer, expectedIdentifier)
+		cmd, err := cr.GetLocalCommand(clusterId, manufacturer, ClientToServer, expectedIdentifier)
 		actualType := reflect.TypeOf(cmd)
 
 		assert.NoError(t, err)

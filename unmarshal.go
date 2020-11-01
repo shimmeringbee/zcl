@@ -28,7 +28,7 @@ func (cr *CommandRegistry) Unmarshal(appMsg zigbee.ApplicationMessage) (Message,
 
 		command = foundCommand
 	case FrameLocal:
-		foundCommand, err := cr.GetLocalCommand(appMsg.ClusterID, header.Manufacturer, header.CommandIdentifier)
+		foundCommand, err := cr.GetLocalCommand(appMsg.ClusterID, header.Manufacturer, header.Control.Direction, header.CommandIdentifier)
 
 		if err != nil {
 			return Message{}, fmt.Errorf("unknown ZCL local command identifier received: %d", header.CommandIdentifier)

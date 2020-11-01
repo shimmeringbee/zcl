@@ -17,7 +17,7 @@ func Test_Unmarshal(t *testing.T) {
 
 	cr := NewCommandRegistry()
 	cr.RegisterGlobal(commandID, &Command{})
-	cr.RegisterLocal(clusterID, manufacturer, commandID, &Command{})
+	cr.RegisterLocal(clusterID, manufacturer, ClientToServer, commandID, &Command{})
 
 	t.Run("message with unknown command identifier", func(t *testing.T) {
 		in := zigbee.ApplicationMessage{

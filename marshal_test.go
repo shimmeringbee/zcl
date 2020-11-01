@@ -17,7 +17,7 @@ func Test_Marshal(t *testing.T) {
 
 	cr := NewCommandRegistry()
 	cr.RegisterGlobal(commandID, &Command{})
-	cr.RegisterLocal(clusterID, manufacturer, commandID, &Command{})
+	cr.RegisterLocal(clusterID, manufacturer, ClientToServer, commandID, &Command{})
 
 	t.Run("a manufacturer specific header and global message marshals", func(t *testing.T) {
 		in := Message{

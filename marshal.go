@@ -32,7 +32,7 @@ func (cr *CommandRegistry) Marshal(message Message) (zigbee.ApplicationMessage, 
 
 		header.CommandIdentifier = commandId
 	case FrameLocal:
-		commandId, err := cr.GetLocalCommandIdentifier(message.ClusterID, message.Manufacturer, message.Command)
+		commandId, err := cr.GetLocalCommandIdentifier(message.ClusterID, message.Manufacturer, message.Direction, message.Command)
 
 		if err != nil {
 			return zigbee.ApplicationMessage{}, err
