@@ -47,6 +47,7 @@ func Test_Unmarshal(t *testing.T) {
 			ClusterID:           0x8888,
 			SourceEndpoint:      0x03,
 			DestinationEndpoint: 0x04,
+			CommandIdentifier:   commandID,
 			Command: &Command{
 				FieldOne: 0xaa,
 			},
@@ -74,6 +75,7 @@ func Test_Unmarshal(t *testing.T) {
 			ClusterID:           0x8888,
 			SourceEndpoint:      0x03,
 			DestinationEndpoint: 0x04,
+			CommandIdentifier:   commandID,
 			Command: &Command{
 				FieldOne: 0xaa,
 			},
@@ -101,6 +103,7 @@ func Test_Unmarshal(t *testing.T) {
 			ClusterID:           clusterID,
 			SourceEndpoint:      0x03,
 			DestinationEndpoint: 0x04,
+			CommandIdentifier:   commandID,
 			Command: &Command{
 				FieldOne: 0xaa,
 			},

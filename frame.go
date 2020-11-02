@@ -41,6 +41,7 @@ type Message struct {
 	ClusterID           zigbee.ClusterID
 	SourceEndpoint      zigbee.Endpoint
 	DestinationEndpoint zigbee.Endpoint
+	CommandIdentifier   CommandIdentifier
 	Command             interface{}
 }
 

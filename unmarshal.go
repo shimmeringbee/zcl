@@ -51,6 +51,7 @@ func (cr *CommandRegistry) Unmarshal(appMsg zigbee.ApplicationMessage) (Message,
 		ClusterID:           appMsg.ClusterID,
 		SourceEndpoint:      appMsg.SourceEndpoint,
 		DestinationEndpoint: appMsg.DestinationEndpoint,
+		CommandIdentifier:   header.CommandIdentifier,
 		Command:             command,
 	}, nil
 }

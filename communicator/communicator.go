@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/shimmeringbee/zcl"
 	"github.com/shimmeringbee/zcl/commands/global"
 	"github.com/shimmeringbee/zigbee"
@@ -68,8 +67,6 @@ func (c *Communicator) ProcessIncomingMessage(msg zigbee.NodeIncomingMessageEven
 	c.mutex.RLock()
 	ourMatches := c.matches
 	c.mutex.RUnlock()
-
-	spew.Dump(message)
 
 	for _, match := range ourMatches {
 		if match.Matcher(msg.IEEEAddress, msg.ApplicationMessage, message) {
