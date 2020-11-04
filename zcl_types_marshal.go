@@ -88,9 +88,9 @@ func marshalZCLType(bb *bitbuffer.BitBuffer, ctx bytecodec.Context, dt Attribute
 	case TypeStringOctet16:
 		return marshalString(bb, v, 16)
 	case TypeStringCharacter8:
-		return marshalStringRune(bb, v, 8)
+		return marshalString(bb, v, 8)
 	case TypeStringCharacter16:
-		return marshalStringRune(bb, v, 16)
+		return marshalString(bb, v, 16)
 	case TypeTimeOfDay:
 		return marshalTimeOfDay(bb, v)
 	case TypeDate:

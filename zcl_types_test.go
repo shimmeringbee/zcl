@@ -935,7 +935,42 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.Equal(t, expectedValue, actualValue)
 	})
 
-	t.Run("marshaling and unmarshaling of character 8 type", func(t *testing.T) {
+	t.Run("marshaling and unmarshaling of character 8 type - ASCII", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeStringCharacter8,
+			Value:    "ZigBee",
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x42, 0x06, 0x5a, 0x69, 0x67, 0x42, 0x65, 0x65}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of character 16 type - ASCII", func(t *testing.T) {
+		expectedValue := &AttributeDataTypeValue{
+			DataType: TypeStringCharacter16,
+			Value:    "ZigBee",
+		}
+		actualValue := &AttributeDataTypeValue{}
+		expectedBytes := []byte{0x44, 0x06, 0x00, 0x5a, 0x69, 0x67, 0x42, 0x65, 0x65}
+
+		actualBytes, err := bytecodec.Marshal(&expectedValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedBytes, actualBytes)
+
+		err = bytecodec.Unmarshal(expectedBytes, &actualValue)
+		assert.NoError(t, err)
+		assert.Equal(t, expectedValue, actualValue)
+	})
+
+	t.Run("marshaling and unmarshaling of character 8 type - utf8", func(t *testing.T) {
+		t.Skip("disable utf-8 support, this needs to be switchable, as the character set can vary from device to device")
 		expectedValue := &AttributeDataTypeValue{
 			DataType: TypeStringCharacter8,
 			Value:    "Zig🐝",
@@ -952,7 +987,8 @@ func Test_AttributeDataTypeValue(t *testing.T) {
 		assert.Equal(t, expectedValue, actualValue)
 	})
 
-	t.Run("marshaling and unmarshaling of character 16 type", func(t *testing.T) {
+	t.Run("marshaling and unmarshaling of character 16 type - utf8", func(t *testing.T) {
+		t.Skip("disable utf-8 support, this needs to be switchable, as the character set can vary from device to device")
 		expectedValue := &AttributeDataTypeValue{
 			DataType: TypeStringCharacter16,
 			Value:    "Zig🐝",

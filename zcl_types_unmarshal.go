@@ -99,9 +99,9 @@ func unmarshalZCLType(bb *bitbuffer.BitBuffer, dt AttributeDataType, ctx bytecod
 	case TypeStringOctet16:
 		return unmarshalString(bb, 16)
 	case TypeStringCharacter8:
-		return unmarshalStringRune(bb, 8)
+		return unmarshalString(bb, 8)
 	case TypeStringCharacter16:
-		return unmarshalStringRune(bb, 16)
+		return unmarshalString(bb, 16)
 	case TypeTimeOfDay:
 		return unmarshalTimeOfDay(bb)
 	case TypeDate:
