@@ -65,10 +65,7 @@ func (c *Communicator) ProcessIncomingMessage(msg zigbee.NodeIncomingMessageEven
 	}
 
 	c.mutex.RLock()
-	ourMatches := c.matches
-	c.mutex.RUnlock()
-
-	for _, match := range ourMatches {
+	for _, match := range c.matches {
 		if match.Matcher(msg.IEEEAddress, msg.ApplicationMessage, message) {
 			go match.Callback(MessageWithSource{
 				SourceAddress: msg.IEEEAddress,
@@ -76,6 +73,7 @@ func (c *Communicator) ProcessIncomingMessage(msg zigbee.NodeIncomingMessageEven
 			})
 		}
 	}
+	c.mutex.RUnlock()
 
 	return nil
 }
