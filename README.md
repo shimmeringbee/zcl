@@ -29,7 +29,7 @@ import "github.com/shimmeringbee/zcl"
 
 ## Usage
 
-**This libraries API is unstable and should not yet be relied upon.**
+**This library's API is unstable and should not yet be relied upon.**
 
 This piece of software is not ready for general use.
 
@@ -49,7 +49,7 @@ All Shimmering Bee projects follow the [Contributor Covenant](https://shimmering
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+   You may obtain a copy of the License at:
 
        http://www.apache.org/licenses/LICENSE-2.0
 
