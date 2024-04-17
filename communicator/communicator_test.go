@@ -335,7 +335,6 @@ func TestCommunicator_GlobalReadAttributes(t *testing.T) {
 		ieee := zigbee.IEEEAddress(0x0102030405060708)
 
 		c := NewCommunicator(mockProvider, cr)
-		g := c.Global()
 
 		expectedValue := "value"
 		clusterId := zigbee.ClusterID(0x1223)
@@ -416,7 +415,7 @@ func TestCommunicator_GlobalReadAttributes(t *testing.T) {
 			})
 		})
 
-		resp, err := g.ReadAttributes(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, []zcl.AttributeID{0x0004, 0x0005})
+		resp, err := c.ReadAttributes(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, []zcl.AttributeID{0x0004, 0x0005})
 		assert.NoError(t, err)
 		assert.Equal(t, expectedResponse.Records, resp)
 	})
@@ -431,7 +430,6 @@ func TestCommunicator_GlobalWritesAttributes(t *testing.T) {
 		ieee := zigbee.IEEEAddress(0x0102030405060708)
 
 		c := NewCommunicator(mockProvider, cr)
-		g := c.Global()
 
 		clusterId := zigbee.ClusterID(0x1223)
 
@@ -511,7 +509,7 @@ func TestCommunicator_GlobalWritesAttributes(t *testing.T) {
 			})
 		})
 
-		resp, err := g.WriteAttributes(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, map[zcl.AttributeID]zcl.AttributeDataTypeValue{0x0004: {DataType: zcl.TypeUnsignedInt8, Value: uint(8)}})
+		resp, err := c.WriteAttributes(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, map[zcl.AttributeID]zcl.AttributeDataTypeValue{0x0004: {DataType: zcl.TypeUnsignedInt8, Value: uint(8)}})
 		assert.NoError(t, err)
 		assert.Equal(t, expectedResponse.Records, resp)
 	})
@@ -526,7 +524,6 @@ func TestCommunicator_GlobalConfigureReporting(t *testing.T) {
 		ieee := zigbee.IEEEAddress(0x0102030405060708)
 
 		c := NewCommunicator(mockProvider, cr)
-		g := c.Global()
 
 		clusterId := zigbee.ClusterID(0x1223)
 
@@ -615,7 +612,7 @@ func TestCommunicator_GlobalConfigureReporting(t *testing.T) {
 			})
 		})
 
-		err := g.ConfigureReporting(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, attributeId, dataType, minInterval, maxInterval, reportableChange)
+		err := c.ConfigureReporting(context.Background(), ieee, true, clusterId, zigbee.NoManufacturer, srcEndpoint, destEndpoint, transactionSequence, attributeId, dataType, minInterval, maxInterval, reportableChange)
 		assert.NoError(t, err)
 	})
 }
